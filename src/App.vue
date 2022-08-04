@@ -1,16 +1,5 @@
 <template>
-  <div>{{$store.state.user.profile}}</div>
-  <button @click="fn">测试请求</button>
+  <div>
+    <router-view ></router-view>
+  </div>
 </template>
-<script>
-import request from './utils/request'
-export default {
-  setup () {
-    const fn = () => {
-      request('/member/profile', 'get', { a: 100 })
-    }
-
-    return { fn }
-  }
-}
-</script>

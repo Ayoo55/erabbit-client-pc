@@ -7,7 +7,7 @@ import request from './utils/request'
 export default {
   setup () {
     const fn = () => {
-      request('/member/profile', 'get')
+      request('/member/profile', 'get', { a: 100 })
     }
 
     return { fn }

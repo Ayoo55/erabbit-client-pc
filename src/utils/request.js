@@ -19,7 +19,7 @@ instance.interceptors.request.use(config => {
   return Promise.reject(error)
 })
 
-// 相应拦截器
+// 响应拦截器
 instance.interceptors.response.use(response => {
   return response.data
 }, error => {
@@ -30,7 +30,7 @@ instance.interceptors.response.use(response => {
     // 3. 跳转需要传参（当前路由地址）给登录页码
 
     store.commit('user/setUser', {})
-    const fullPath = encodeURIComponent(router.currentRoute.fullPath)
+    const fullPath = encodeURIComponent(router.currentRoute.value.fullPath)
     router.push('/login?redirectUrl=' + fullPath)
   }
   return Promise.reject(error)

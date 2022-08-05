@@ -10,7 +10,7 @@
     </ul>
     <!-- 弹层 -->
     <div class="layer">
-+      <h4 v-if="currCategory">{{currCategory.id==='brand'?'品牌':'分类'}}推荐 <small>根据您的购买或浏览记录推荐</small></h4>
+     <h4 v-if="currCategory">{{currCategory.id==='brand'?'品牌':'分类'}}推荐 <small>根据您的购买或浏览记录推荐</small></h4>
       <ul v-if="currCategory && currCategory.goods && currCategory.goods.length">
         <li v-for="item in currCategory.goods" :key="item.id">
           <RouterLink to="/">
@@ -23,18 +23,18 @@
           </RouterLink>
         </li>
       </ul>
-+      <ul v-if="currCategory && currCategory.brands && currCategory.brands.length">
-+        <li class="brand" v-for="item in currCategory.brands" :key="item.id">
-+          <RouterLink to="/">
-+            <img :src="item.picture" alt="">
-+            <div class="info">
-+              <p class="place"><i class="iconfont icon-dingwei"></i>{{item.place}}</p>
-+              <p class="name ellipsis">{{item.name}}</p>
-+              <p class="desc ellipsis-2">{{item.desc}}</p>
-+            </div>
-+          </RouterLink>
-+        </li>
-+      </ul>
+      <ul v-if="currCategory && currCategory.brands && currCategory.brands.length">
+        <li class="brand" v-for="item in currCategory.brands" :key="item.id">
+         <RouterLink to="/">
+            <img :src="item.picture" alt="">
+            <div class="info">
+              <p class="place"><i class="iconfont icon-dingwei"></i>{{item.place}}</p>
+              <p class="name ellipsis">{{item.name}}</p>
+              <p class="desc ellipsis-2">{{item.desc}}</p>
+            </div>
+         </RouterLink>
+       </li>
+      </ul>
     </div>
   </div>
 </template>

@@ -1,4 +1,5 @@
 <template>
+  <!-- 轮播图容器 -->
   <div class='xtx-carousel' @mouseenter="stop()" @mouseleave="start()">
     <ul class="carousel-body">
       <li :class="{fade:index===i}" class="carousel-item" v-for="(item,i) in sliders" :key="i">
@@ -7,8 +8,11 @@
         </RouterLink>
       </li>
     </ul>
+    <!-- 上一张 -->
     <a @click="toggle(-1)" href="javascript:;" class="carousel-btn prev"><i class="iconfont icon-angle-left"></i></a>
+    <!-- 下一张 -->
     <a @click="toggle(1)" href="javascript:;" class="carousel-btn next"><i class="iconfont icon-angle-right"></i></a>
+    <!-- 指示器 -->
     <div class="carousel-indicator">
       <span  v-for="i in 5" :key="i"></span>
     </div>

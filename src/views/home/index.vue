@@ -6,17 +6,26 @@
       <HomeCategory />
       <!-- 轮播图 -->
       <HomeBanner />
+
+      <XtxMore path="/test"></XtxMore>
+      <HomePanel title="hao" subTitle="hen">
+        <template #right>
+          <XtxMore path="/"></XtxMore>
+        </template>
+      </HomePanel>
     </div>
   </div>
 </template>
 <script>
 import HomeCategory from './components/home-category'
 import HomeBanner from './components/home-banner'
+import HomePanel from './components/home-panel.vue'
 export default {
   name: 'HomePage',
   components: {
     HomeCategory,
-    HomeBanner
+    HomeBanner,
+    HomePanel
   }
 }
 </script>

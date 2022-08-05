@@ -1,36 +1,48 @@
 <template>
   <div>
-    <ul class="app-header-nav">
-        <li class="home"><RouterLink to="/">首页</RouterLink></li>
-        <li>
-            <a href="#">美食</a>
-            <div class="layer">
-                <ul>
-                    <li v-for="i in 10" :key="i">
-                        <a href="#">
-                        <img src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/img/category%20(4).png" alt="">
-                        <p>果干</p>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        <li><a href="#">餐厨</a></li>
-        <li><a href="#">艺术</a></li>
-        <li><a href="#">电器</a></li>
-        <li><a href="#">居家</a></li>
-        <li><a href="#">洗护</a></li>
-        <li><a href="#">孕婴</a></li>
-        <li><a href="#">服装</a></li>
-        <li><a href="#">杂货</a></li>
-      </ul>
+      <ul class="app-header-nav">
+    <li class="home"><RouterLink to="/">首页</RouterLink></li>
+    <li v-for="item in list" :key="item.id" @mouseenter="show(item)" @mouseleave="hide(item)">
+      <RouterLink :to="`/category/${item.id}`" @click="hide(item)">{{item.name}}</RouterLink>
+      <div class="layer" :class="{open:item.open}">
+        <ul>
+          <li v-for="sub in item.children" :key="sub.id">
+            <RouterLink :to="`/category/sub/${sub.id}`" @click="hide(item)">
+              <img :src="sub.picture" alt="">
+              <p>{{sub.name}}</p>
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+
   </div>
 </template>
 
 <script>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
 export default {
 
-  name: 'AppHeaderNav'
+  name: 'AppHeaderNav',
+  setup () {
+    // 使用 vuex 数据，必须要用useStore
+    const store = useStore()
+    const list = computed(() => {
+      return store.state.category.list
+    })
+    // 当调用show方法时，因为数据存储在vuex的 mutations 中，所以需要提交数据，获取方法
+    // 同时需要传递一个参数，表明当前选中的分类
+    const show = (item) => {
+      store.commit('category/show', item)
+    }
+    const hide = (item) => {
+      store.commit('category/hide', item)
+    }
+    return { list, show, hide }
+  }
 
 }
 </script>
@@ -58,14 +70,18 @@ export default {
           color: @xtxColor;
           border-bottom: 1px solid @xtxColor;
         }
-        > .layer {
-        height: 132px;
-        opacity: 1;
-      }
+      //   > .layer {
+      //   height: 132px;
+      //   opacity: 1;
+      // }
       }
     }
   }
 .layer {
+  &.open{
+    height: 132px;
+    opacity: 1;
+  }
   width: 1240px;
   background-color: #fff;
   position: absolute;

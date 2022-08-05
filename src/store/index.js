@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 import createPersistedstate from 'vuex-persistedstate'
 
 import user from './modules/user'
-import categoty from './modules/categoty'
+import category from './modules/category'
 import cart from './modules/cart'
 export default createStore({
   state: {
@@ -15,7 +15,7 @@ export default createStore({
   },
   modules: {
     user,
-    categoty,
+    category,
     cart
   },
   plugins: [

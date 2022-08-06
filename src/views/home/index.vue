@@ -6,26 +6,25 @@
       <HomeCategory />
       <!-- 轮播图 -->
       <HomeBanner />
-
-      <XtxMore path="/test"></XtxMore>
-      <HomePanel title="hao" subTitle="hen">
-        <template #right>
-          <XtxMore path="/"></XtxMore>
-        </template>
-      </HomePanel>
+      <!-- 新鲜好物 -->
+      <HomeNew></HomeNew>
+      <!-- 人气推荐 -->
+      <HomeHot></HomeHot>
     </div>
   </div>
 </template>
 <script>
 import HomeCategory from './components/home-category'
 import HomeBanner from './components/home-banner'
-import HomePanel from './components/home-panel.vue'
+import HomeNew from './components/home-new.vue'
+import HomeHot from './components/home-hot.vue'
 export default {
   name: 'HomePage',
   components: {
     HomeCategory,
     HomeBanner,
-    HomePanel
+    HomeNew,
+    HomeHot
   }
 }
 </script>

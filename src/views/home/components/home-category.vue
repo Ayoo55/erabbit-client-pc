@@ -114,6 +114,11 @@ export default {
       }
     }
   }
+  &:hover {
+    .layer {
+      display: block;
+    }
+  }
 }
 .layer {
     width: 990px;
@@ -199,11 +204,6 @@ export default {
           }
         }
       }
-    }
-  }
-  &:hover {
-    .layer {
-      display: block;
     }
   }
 

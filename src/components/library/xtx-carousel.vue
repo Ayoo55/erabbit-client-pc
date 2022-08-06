@@ -14,7 +14,7 @@
     <a @click="toggle(1)" href="javascript:;" class="carousel-btn next"><i class="iconfont icon-angle-right"></i></a>
     <!-- 指示器 -->
     <div class="carousel-indicator">
-      <span  v-for="i in 5" :key="i"></span>
+      <span v-for="(item,i) in sliders" :key="i" :class="{active:index===i}"></span>
     </div>
   </div>
 </template>
@@ -72,7 +72,7 @@ export default {
     // 指示器切换
     const toggle = (step) => {
       const newIndex = index.value + step
-      if (newIndex >= props.sliders.length - 1) {
+      if (newIndex >= props.sliders.length) {
         index.value = 0
         return
       }

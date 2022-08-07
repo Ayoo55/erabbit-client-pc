@@ -1,7 +1,12 @@
 <template>
-  <div>
-    <XtxBread parentName="wangwang" parentPath="/index/123">hao</XtxBread>
-    <XtxBread parentName="wangwang">hen</XtxBread>
+  <div class="top-category">
+    <div class="container">
+      <XtxBread>
+        <XtxBreadItem to="/" >首页</XtxBreadItem>
+        <XtxBreadItem :to="{path:'/category/1001'}">电器</XtxBreadItem>
+        <XtxBreadItem >空调</XtxBreadItem>
+      </XtxBread>
+    </div>
   </div>
 </template>
 <script>

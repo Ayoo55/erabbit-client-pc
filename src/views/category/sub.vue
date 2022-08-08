@@ -5,20 +5,24 @@
       <SubBread />
       <!-- 筛选组件 -->
       <SubFilter></SubFilter>
-      <!-- 复选框 -->
-      <XtxCheckbox v-model="modelValue">全选{{modelValue}}</XtxCheckbox>
+      <!-- 排序 -->
+      <div class="goods-list">
+        <SubSort></SubSort>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import SubBread from './components/sub-bread.vue'
 import SubFilter from './sub-filter.vue'
+import SubSort from './components/sub-sort.vue'
 import { ref } from 'vue'
 export default {
   name: 'SubCategory',
   components: {
     SubBread,
-    SubFilter
+    SubFilter,
+    SubSort
   },
   setup () {
     const modelValue = ref(true)

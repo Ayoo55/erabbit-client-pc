@@ -5,6 +5,8 @@
       <SubBread />
       <!-- 筛选组件 -->
       <SubFilter></SubFilter>
+      <!-- 复选框 -->
+      <XtxCheckbox>全选</XtxCheckbox>
     </div>
   </div>
 </template>
@@ -19,4 +21,22 @@ export default {
   }
 }
 </script>
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.xtx-checkbox {
+  display: inline-block;
+  margin-right: 2px;
+  .icon-checked {
+    color: @xtxColor;
+    ~ span {
+      color: @xtxColor;
+    }
+  }
+  i {
+    position: relative;
+    top: 1px;
+  }
+  span {
+    margin-left: 2px;
+  }
+}
+</style>

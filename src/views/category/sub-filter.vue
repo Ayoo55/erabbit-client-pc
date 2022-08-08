@@ -36,7 +36,7 @@ export default {
     const filterLoading = ref(false)
     // 4. 分类发生变化的时候需要重新获取筛选数据，需要使用侦听器
     watch(() => route.params.id, (newVal, oldVal) => {
-      // 当你从二级分类去顶级分类也会拿到ID，不能去加载数据因为它不是二级分类的ID
+      // 当从二级分类去顶级分类也会拿到ID，不能去加载数据因为它不是二级分类的ID
       if (newVal && route.path === ('/category/sub/' + newVal)) {
         filterLoading.value = true
         newVal && findSubCategoryFilter(route.params.id).then(({ result }) => {

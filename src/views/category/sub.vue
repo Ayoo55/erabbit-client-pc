@@ -6,18 +6,23 @@
       <!-- 筛选组件 -->
       <SubFilter></SubFilter>
       <!-- 复选框 -->
-      <XtxCheckbox>全选</XtxCheckbox>
+      <XtxCheckbox v-model="modelValue">全选{{modelValue}}</XtxCheckbox>
     </div>
   </div>
 </template>
 <script>
 import SubBread from './components/sub-bread.vue'
 import SubFilter from './sub-filter.vue'
+import { ref } from 'vue'
 export default {
   name: 'SubCategory',
   components: {
     SubBread,
     SubFilter
+  },
+  setup () {
+    const modelValue = ref(true)
+    return { modelValue }
   }
 }
 </script>

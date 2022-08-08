@@ -6,14 +6,24 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 export default {
   name: 'XtxCheckbox',
-  setup () {
+  props: {
+    modelValue: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup (props, { emit }) {
     const checked = ref(false)
     const changeChecked = () => {
       checked.value = !checked.value
+      emit('update:modelValue', checked.value)
     }
+    watch(() => props.modelValue, (newValue) => {
+      checked.value = props.modelValue
+    }, { immediate: true })
     return { checked, changeChecked }
   }
 }

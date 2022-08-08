@@ -79,7 +79,9 @@ export default {
       })
     }
     watch(() => route.params.id, (newValue) => {
-      newValue && getSubList()
+      if (newValue && route.path === `/category/${newValue}`) {
+        getSubList()
+      }
     }, { immediate: true })
 
     return { sliders, topCategory, subList }

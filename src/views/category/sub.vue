@@ -7,7 +7,7 @@
       <SubFilter></SubFilter>
       <!-- 排序 -->
       <div class="goods-list">
-        <SubSort></SubSort>
+        <SubSort @sort-change="sortChange"></SubSort>
         <ul>
           <li v-for="item in goodsList" :key="item.id" >
             <GoodsItem :goods="item" />
@@ -65,13 +65,16 @@ export default {
             pageSize: 20
           }
         }
-        console.log(goodsList.value)
-        console.log('/category/sub/' + newVal)
-        console.log(newVal, oldVal)
       })
-      console.log(goodsList.value)
     }
-    return { loading, finished, getData, goodsList }
+
+    const sortChange = (sortParams) => {
+      finished.value = false
+      reqParams = { ...reqParams, ...sortParams }
+      reqParams.page = 1
+      goodsList.value = []
+    }
+    return { loading, finished, getData, goodsList, sortChange }
   }
 }
 </script>

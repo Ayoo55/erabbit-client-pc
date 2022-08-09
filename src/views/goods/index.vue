@@ -12,8 +12,11 @@
         <div class="goods-info">
             <div class="media">
                 <GoodsImage :images="goods.mainPictures"></GoodsImage>
+                <GoodsSales></GoodsSales>
             </div>
-            <div class="spec"></div>
+            <div class="spec">
+                <GoodsName :goods="goods"></GoodsName>
+            </div>
         </div>
         <!-- 商品推荐 -->
         <GoodsRelevant/>
@@ -38,9 +41,11 @@ import GoodsRelevant from './components/goods-relevant'
 import { findGoods } from '@/api/product.js'
 import { nextTick, ref, watch } from 'vue'
 import GoodsImage from './components/goods-image.vue'
+import GoodsSales from './components/goods-sales'
+import GoodsName from './components/goods-name'
 export default {
   name: 'XtxGoodsPage',
-  components: { GoodsRelevant, GoodsImage },
+  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName },
   setup () {
     const goods = useGoods()
     console.log(goods)

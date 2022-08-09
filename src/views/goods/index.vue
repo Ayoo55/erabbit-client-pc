@@ -4,14 +4,14 @@
       <!-- 面包屑 -->
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
-        <XtxBreadItem to="/">手机</XtxBreadItem>
-        <XtxBreadItem to="/">华为</XtxBreadItem>
-        <XtxBreadItem to="/">p30</XtxBreadItem>
+        <XtxBreadItem v-if="goods" :to="`/category/${goods.categories[1].id}`">{{goods.categories[1].name}}</XtxBreadItem>
+        <XtxBreadItem v-if="goods" :to="`/category/sub/${goods.categories[0].id}`">{{goods.categories[0].name}}</XtxBreadItem>
+        <XtxBreadItem v-if="goods" >{{goods.name}}</XtxBreadItem>
       </XtxBread>
       <!-- 商品信息 -->
       <div class="goods-info"></div>
       <!-- 商品推荐 -->
-      <GoodsRelevant />
+      <GoodsRelevant v-if="goods"/>
       <!-- 商品详情 -->
       <div class="goods-footer">
         <div class="goods-article">
@@ -28,10 +28,38 @@
 </template>
 
 <script>
+import { useRoute } from 'vue-router'
 import GoodsRelevant from './components/goods-relevant'
+import { findGoods } from '@/api/product.js'
+import { nextTick, ref, watch } from 'vue'
 export default {
   name: 'XtxGoodsPage',
-  components: { GoodsRelevant }
+  components: { GoodsRelevant },
+  setup () {
+    const goods = useGoods()
+    console.log(goods)
+    return { goods }
+  }
+}
+// 获取商品信息函数
+const useGoods = () => {
+  // goods存储商品信息
+  const goods = ref(null)
+  const route = useRoute()
+  //   监听路由中Id的改变
+  watch(() => route.params.id, (newVal) => {
+    if (newVal && `/product/${newVal}` === route.path) {
+      findGoods(route.params.id).then(data => {
+        // 将 goods 中的数据置空，这样可以重新渲染组件
+        goods.value = null
+        // 等待 goods 置空后再赋值
+        nextTick(() => {
+          goods.value = data.result
+        })
+      })
+    }
+  }, { immediate: true })
+  return goods
 }
 </script>
 

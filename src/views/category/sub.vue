@@ -8,6 +8,12 @@
       <!-- 排序 -->
       <div class="goods-list">
         <SubSort></SubSort>
+        <ul>
+          <li v-for="item in goodsList" :key="item.id" >
+            <GoodsItem :goods="item" />
+          </li>
+        </ul>
+        <XtxInfiniteLoading :finished="finished" :loading="loading" @infinite="getData"></XtxInfiniteLoading>
       </div>
     </div>
   </div>
@@ -16,17 +22,56 @@
 import SubBread from './components/sub-bread.vue'
 import SubFilter from './sub-filter.vue'
 import SubSort from './components/sub-sort.vue'
-import { ref } from 'vue'
+import GoodsItem from './components/goods-item.vue'
+import { findSubCategoryGoods } from '@/api/category'
+import { useRoute } from 'vue-router'
+import { ref, watch } from 'vue'
 export default {
   name: 'SubCategory',
   components: {
     SubBread,
     SubFilter,
-    SubSort
+    SubSort,
+    GoodsItem
   },
   setup () {
-    const modelValue = ref(true)
-    return { modelValue }
+    const route = useRoute()
+    const loading = ref(false)
+    const finished = ref(false)
+    const goodsList = ref([])
+    let reqParams = {
+      page: 1,
+      pageSize: 20
+    }
+    const getData = () => {
+      loading.value = true
+      reqParams.categoryId = route.params.id
+      findSubCategoryGoods(reqParams).then(({ result }) => {
+        if (result.items.length) {
+          goodsList.value.push(...result.items)
+          reqParams.page++
+        } else {
+          finished.value = true
+        }
+        loading.value = false
+      })
+      // 切换二级分类重新加载
+      watch(() => route.params.id, (newVal, oldVal) => {
+        if (newVal && route.path === '/category/sub/' + newVal) {
+          finished.value = false
+          goodsList.value = []
+          reqParams = {
+            page: 1,
+            pageSize: 20
+          }
+        }
+        console.log(goodsList.value)
+        console.log('/category/sub/' + newVal)
+        console.log(newVal, oldVal)
+      })
+      console.log(goodsList.value)
+    }
+    return { loading, finished, getData, goodsList }
   }
 }
 </script>
@@ -46,6 +91,23 @@ export default {
   }
   span {
     margin-left: 2px;
+  }
+}
+.goods-list {
+  background: #fff;
+  padding: 0 25px;
+  margin-top: 25px;
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 5px;
+    li {
+      margin-right: 20px;
+      margin-bottom: 20px;
+      &:nth-child(5n) {
+        margin-right: 0;
+      }
+    }
   }
 }
 </style>

@@ -4,7 +4,7 @@
       <!-- 面包屑 -->
       <SubBread />
       <!-- 筛选组件 -->
-      <SubFilter></SubFilter>
+      <SubFilter @filter-change="changeFilter"></SubFilter>
       <!-- 排序 -->
       <div class="goods-list">
         <SubSort @sort-change="sortChange"></SubSort>
@@ -74,7 +74,15 @@ export default {
       reqParams.page = 1
       goodsList.value = []
     }
-    return { loading, finished, getData, goodsList, sortChange }
+
+    const changeFilter = (filterParams) => {
+      finished.value = false
+      reqParams = { ...reqParams, ...filterParams }
+      reqParams.page = 1
+      goodsList.value = []
+      console.log(filterParams)
+    }
+    return { loading, finished, getData, goodsList, sortChange, changeFilter }
   }
 }
 </script>

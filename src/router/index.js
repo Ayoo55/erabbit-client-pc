@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import TopCategory from '@/views/category'
 import SubCategory from '@/views/category/sub.vue'
+import Goods from '@/views/goods/index.vue'
 const routes = [
   {
     path: '/',
@@ -17,6 +18,10 @@ const routes = [
       {
         path: '/category/sub/:id',
         component: SubCategory
+      },
+      {
+        path: '/product/:id',
+        component: Goods
       }
     ]
   }
@@ -25,6 +30,7 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+  // 路由重新渲染时调整页面位置到顶部
   scrollBehavior () {
     return { left: 0, top: 0 }
   }

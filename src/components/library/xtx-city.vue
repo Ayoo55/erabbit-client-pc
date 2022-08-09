@@ -1,25 +1,37 @@
 <template>
   <div class="xtx-city" ref="target">
     <div class="select" @click="toggle" :class="{active:visiable}">
-      <span class="placeholder">请选择配送地址</span>
-      <span class="value"></span>
-      <i class="iconfont icon-angle-down"></i>
+        <span class="placeholder">请选择配送地址</span>
+        <span class="value"></span>
+        <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="option" v-if="visiable">
-      <span class="ellipsis" v-for="i in 24" :key="i">北京市</span>
+        <div v-if="loading" class="loading"></div>
+        <template v-else>
+        <span  class="ellipsis" v-for="item in currList" :key="item.code">{{item.name}}</span>
+        </template>
     </div>
   </div>
 </template>
 <script>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
-
+import axios from 'axios'
 export default {
   name: 'XtxCity',
   setup () {
     const visiable = ref(null)
+    const loading = ref(false)
+    const allcityData = ref([])
     const open = () => {
+      loading.value = true
       visiable.value = true
+      //   获取城市数据
+      getCityData().then(data => {
+        allcityData.value = data
+        loading.value = false
+        console.log(allcityData.value[0])
+      })
     }
     const close = () => {
       visiable.value = false
@@ -33,9 +45,31 @@ export default {
     onClickOutside(target, () => {
       close()
     })
-    return { visiable, toggle, target }
+
+    const currList = computed(() => {
+      const currList = allcityData.value
+      return currList
+    })
+    return { visiable, toggle, target, loading, currList }
   }
 
+}
+// 获取城市数据
+const getCityData = () => {
+  // 返回promise
+  return new Promise((resolve, reject) => {
+    if (window.cityData) {
+      // 有本地缓存
+      resolve(window.cityData)
+    } else {
+      // 没有本地缓存，调用接口获取数据
+      const url = 'https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/area.json'
+      axios.get(url).then(res => {
+        window.cityData = res.data
+        resolve(res.data)
+      })
+    }
+  })
 }
 </script>
 <style scoped lang="less">
@@ -77,14 +111,19 @@ export default {
     flex-wrap: wrap;
     padding: 10px;
     > span {
-      width: 130px;
-      text-align: center;
-      cursor: pointer;
-      border-radius: 4px;
-      padding: 0 3px;
-      &:hover {
-        background: #f5f5f5;
-      }
+        width: 130px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 4px;
+        padding: 0 3px;
+        &:hover {
+            background: #f5f5f5;
+        }
+    }
+    .loading {
+        height: 290px;
+        width: 100%;
+        background: url(../../assets/images/loading.gif) no-repeat center;
     }
   }
 }

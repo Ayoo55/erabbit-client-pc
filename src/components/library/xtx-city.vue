@@ -1,25 +1,31 @@
 <template>
   <div class="xtx-city" ref="target">
     <div class="select" @click="toggle" :class="{active:visiable}">
-        <span class="placeholder">请选择配送地址</span>
-        <span class="value"></span>
+        <span v-if="!fullLocation" class="placeholder">请选择配送地址</span>
+        <span v-else class="value">{{fullLocation}}</span>
         <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="option" v-if="visiable">
         <div v-if="loading" class="loading"></div>
         <template v-else>
-        <span  class="ellipsis" v-for="item in currList" :key="item.code">{{item.name}}</span>
+        <span @click="changeCity(item)" class="ellipsis" v-for="item in currList" :key="item.code">{{item.name}}</span>
         </template>
     </div>
   </div>
 </template>
 <script>
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import axios from 'axios'
 export default {
   name: 'XtxCity',
-  setup () {
+  props: {
+    fullLocation: {
+      type: String,
+      default: ''
+    }
+  },
+  setup (props, { emit }) {
     const visiable = ref(null)
     const loading = ref(false)
     const allcityData = ref([])
@@ -30,8 +36,10 @@ export default {
       getCityData().then(data => {
         allcityData.value = data
         loading.value = false
-        console.log(allcityData.value[0])
       })
+      for (const key in changeResult) {
+        changeResult[key] = ''
+      }
     }
     const close = () => {
       visiable.value = false
@@ -46,11 +54,52 @@ export default {
       close()
     })
 
+    // 当前地址列表
     const currList = computed(() => {
-      const currList = allcityData.value
+      // 省级
+      let currList = allcityData.value
+      //   根据记录的地址数据，选择进入哪一级列表
+      //   市级
+      if (changeResult.provinceCode) {
+        currList = currList.find(item => item.code === changeResult.provinceCode).areaList
+      }
+      //   区级
+      if (changeResult.cityCode) {
+        currList = currList.find(item => item.code === changeResult.cityCode).areaList
+      }
       return currList
     })
-    return { visiable, toggle, target, loading, currList }
+
+    // 记录选中的地址数据
+    const changeResult = reactive({
+      provinceCode: '',
+      provinceName: '',
+      cityCode: '',
+      cityName: '',
+      countyCode: '',
+      countyName: '',
+      fullLocation: ''
+    })
+
+    // 点击地址记录地址，切换列表
+    const changeCity = (item) => {
+      if (item.level === 0) {
+        changeResult.provinceCode = item.code
+        changeResult.provinceName = item.name
+      }
+      if (item.level === 1) {
+        changeResult.cityCode = item.code
+        changeResult.cityName = item.name
+      }
+      if (item.level === 2) {
+        changeResult.countyCode = item.code
+        changeResult.countyName = item.name
+        changeResult.fullLocation = `${changeResult.provinceName} ${changeResult.cityName} ${changeResult.countyName}`
+        close()
+        emit('change', changeResult)
+      }
+    }
+    return { visiable, toggle, target, loading, currList, changeCity }
   }
 
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="xtx-numbox">
-    <div class="label">数量</div>
+    <div class="label" v-if="label">{{label}}</div>
     <div class="numbox">
       <a @click="changeNum(-1)" href="javascript:;">-</a>
       <input type="text" readonly :value="modelValue">
@@ -24,6 +24,10 @@ export default {
     maxNum: {
       default: 10,
       type: Number
+    },
+    label: {
+      default: '',
+      type: String
     }
   },
   setup (props, { emit }) {

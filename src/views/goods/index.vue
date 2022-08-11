@@ -19,7 +19,8 @@
                 <!-- 规格组件 -->
                 <GoodsSku @change="changeSku" skuId="1563028" :goods="goods"/>
                 <!-- 数量组件 -->
-                <XtxNumbox :maxNum="goods.inventory"  v-model="count"></XtxNumbox>
+                <XtxNumbox label="数量" :maxNum="goods.inventory"  v-model="num"></XtxNumbox>
+                <XtxButton type="primary" style="margin-top:20px;">加入购物车</XtxButton>
             </div>
         </div>
         <!-- 商品推荐 -->
@@ -60,8 +61,8 @@ export default {
         goods.value.inventory = sku.inventory
       }
     }
-    const count = ref(1)
-    return { goods, changeSku, count }
+    const num = ref(1)
+    return { goods, changeSku, num }
   }
 }
 // 获取商品信息函数

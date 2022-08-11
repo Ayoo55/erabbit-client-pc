@@ -31,7 +31,7 @@
               <!-- 商品+评价 -->
               <GoodsTabs></GoodsTabs>
               <!-- 注意事项 -->
-              <div class="goods-warn"></div>
+              <GoodsWarn />
             </div>
             <!-- 24热榜+专题推荐 -->
             <div class="goods-aside">
@@ -39,6 +39,7 @@
               <GoodsHot :type="2"></GoodsHot>
             </div>
         </div>
+
     </div>
   </div>
 </template>
@@ -47,16 +48,17 @@
 import { useRoute } from 'vue-router'
 import GoodsRelevant from './components/goods-relevant'
 import { findGoods } from '@/api/product.js'
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, provide, ref, watch } from 'vue'
 import GoodsImage from './components/goods-image.vue'
 import GoodsSales from './components/goods-sales'
 import GoodsName from './components/goods-name'
 import GoodsSku from './components/goods-sku.vue'
 import GoodsTabs from './components/goods-tabs.vue'
 import GoodsHot from './components/goods-hot.vue'
+import GoodsWarn from './components/goods-warn'
 export default {
   name: 'XtxGoodsPage',
-  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku, GoodsTabs, GoodsHot },
+  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku, GoodsTabs, GoodsHot, GoodsWarn },
   setup () {
     const goods = useGoods()
     const changeSku = (sku) => {
@@ -66,6 +68,7 @@ export default {
         goods.value.inventory = sku.inventory
       }
     }
+    provide('goods', goods)
     const num = ref(1)
     return { goods, changeSku, num }
   }

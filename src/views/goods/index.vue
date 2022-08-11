@@ -18,6 +18,8 @@
                 <GoodsName :goods="goods"></GoodsName>
                 <!-- 规格组件 -->
                 <GoodsSku @change="changeSku" skuId="1563028" :goods="goods"/>
+                <!-- 数量组件 -->
+                <XtxNumbox :maxNum="goods.inventory"  v-model="count"></XtxNumbox>
             </div>
         </div>
         <!-- 商品推荐 -->
@@ -58,7 +60,8 @@ export default {
         goods.value.inventory = sku.inventory
       }
     }
-    return { goods, changeSku }
+    const count = ref(1)
+    return { goods, changeSku, count }
   }
 }
 // 获取商品信息函数

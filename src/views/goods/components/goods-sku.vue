@@ -62,17 +62,35 @@ const getSelectedArr = (specs) => {
   })
   return arr
 }
+// 默认选中商品
+const initDefaultSelected = (goods, skuId) => {
+  // 找出选中的那一条sku信息
+  const sku = goods.skus.find(sku => sku.id === skuId)
+  goods.specs.forEach((item, i) => {
+    const val = item.values.find(val => val.name === sku.specs[i].valueName)
+    val.selected = true
+  })
+  console.log(sku)
+}
 export default {
   name: 'GoodsSku',
   props: {
     goods: {
       type: Object,
       default: () => {}
+    },
+    skuId: {
+      type: String,
+      default: ''
     }
   },
   setup (props) {
     const pathMap = getPathMap(props.goods.skus)
     updateDisabledStatus(props.goods.specs, pathMap)
+
+    if (props.skuId) {
+      initDefaultSelected(props.goods, props.skuId)
+    }
     const changeSku = (item, val) => {
       if (val.disabled) {
         return false

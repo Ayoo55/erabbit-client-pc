@@ -17,7 +17,7 @@
             <div class="spec">
                 <GoodsName :goods="goods"></GoodsName>
                 <!-- 规格组件 -->
-                <GoodsSku :goods="goods"/>
+                <GoodsSku skuId="1563028" :goods="goods"/>
             </div>
         </div>
         <!-- 商品推荐 -->

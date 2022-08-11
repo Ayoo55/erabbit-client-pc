@@ -66,11 +66,14 @@ const getSelectedArr = (specs) => {
 const initDefaultSelected = (goods, skuId) => {
   // 找出选中的那一条sku信息
   const sku = goods.skus.find(sku => sku.id === skuId)
-  goods.specs.forEach((item, i) => {
-    const val = item.values.find(val => val.name === sku.specs[i].valueName)
-    val.selected = true
-  })
-  console.log(sku)
+  if (sku) {
+    goods.specs.forEach((spec, i) => {
+      const value = sku.specs[i].valueName
+      spec.values.forEach(val => {
+        val.selected = val.name === value
+      })
+    })
+  }
 }
 export default {
   name: 'GoodsSku',
@@ -84,7 +87,7 @@ export default {
       default: ''
     }
   },
-  setup (props) {
+  setup (props, { emit }) {
     const pathMap = getPathMap(props.goods.skus)
     updateDisabledStatus(props.goods.specs, pathMap)
 
@@ -104,6 +107,22 @@ export default {
         val.selected = true
       }
       updateDisabledStatus(props.goods.specs, pathMap)
+      //   触发change事件将sku数据传递出去
+      const selectedArr = getSelectedArr(props.goods.specs).filter(v => v)
+      if (selectedArr.length === props.goods.specs.length) {
+        const skuIds = pathMap[selectedArr.join(spliter)]
+        const sku = props.goods.skus.find(sku => sku.id === skuIds[0])
+        // 传递
+        emit('change', {
+          skuId: sku.id,
+          price: sku.price,
+          oldPrice: sku.oldPrice,
+          inventory: sku.inventory,
+          specsText: sku.specs.reduce((p, n) => `${p} ${n.name}：${n.valueName}`, '').replace(' ', '')
+        })
+      } else {
+        emit('change', {})
+      }
     }
     return { changeSku, pathMap }
   }

@@ -17,7 +17,7 @@
             <div class="spec">
                 <GoodsName :goods="goods"></GoodsName>
                 <!-- 规格组件 -->
-                <GoodsSku skuId="1563028" :goods="goods"/>
+                <GoodsSku @change="changeSku" skuId="1563028" :goods="goods"/>
             </div>
         </div>
         <!-- 商品推荐 -->
@@ -51,8 +51,14 @@ export default {
   components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku },
   setup () {
     const goods = useGoods()
-    console.log(goods)
-    return { goods }
+    const changeSku = (sku) => {
+      if (sku.skuId) {
+        goods.value.price = sku.price
+        goods.value.oldPrice = sku.oldPrice
+        goods.value.inventory = sku.inventory
+      }
+    }
+    return { goods, changeSku }
   }
 }
 // 获取商品信息函数

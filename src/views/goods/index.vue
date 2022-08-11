@@ -34,7 +34,10 @@
               <div class="goods-warn"></div>
             </div>
             <!-- 24热榜+专题推荐 -->
-            <div class="goods-aside"></div>
+            <div class="goods-aside">
+              <GoodsHot ></GoodsHot>
+              <GoodsHot :type="2"></GoodsHot>
+            </div>
         </div>
     </div>
   </div>
@@ -50,9 +53,10 @@ import GoodsSales from './components/goods-sales'
 import GoodsName from './components/goods-name'
 import GoodsSku from './components/goods-sku.vue'
 import GoodsTabs from './components/goods-tabs.vue'
+import GoodsHot from './components/goods-hot.vue'
 export default {
   name: 'XtxGoodsPage',
-  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku, GoodsTabs },
+  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku, GoodsTabs, GoodsHot },
   setup () {
     const goods = useGoods()
     const changeSku = (sku) => {

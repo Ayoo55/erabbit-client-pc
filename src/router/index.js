@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import TopCategory from '@/views/category'
 import SubCategory from '@/views/category/sub.vue'
 import Goods from '@/views/goods/index.vue'
+import Login from '@/views/login'
 const routes = [
   {
     path: '/',
@@ -24,6 +25,10 @@ const routes = [
         component: Goods
       }
     ]
+  },
+  {
+    path: '/login',
+    component: Login
   }
 ]
 

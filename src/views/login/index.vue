@@ -7,7 +7,7 @@
         <a @click="activeName='qrcode'" :class="{active:activeName==='qrcode'}" href="javascript:;">扫码登录</a>
       </nav>
       <!-- 表单 -->
-      <div v-if="activeName==='account'" class="account-box">表单</div>
+      <LoginForm v-if="activeName==='account'" >表单</LoginForm>
       <!-- 二维码 -->
       <div v-if="activeName==='qrcode'" class="qrcode-box">
         <img src="@/assets/images/qrcode.jpg" alt="">
@@ -22,11 +22,13 @@
 import { ref } from 'vue'
 import LoginHeader from './components/login-header'
 import LoginFooter from './components/login-footer'
+import LoginForm from './components/login-form.vue'
 export default {
   name: 'PageLogin',
   components: {
     LoginHeader,
-    LoginFooter
+    LoginFooter,
+    LoginForm
   },
   setup () {
     const activeName = ref('account')

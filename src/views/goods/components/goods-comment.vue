@@ -42,6 +42,8 @@
         </div>
       </div>
     </div>
+    <!-- 分页 -->
+    <XtxPagination></XtxPagination>
   </div>
 </template>
 <script>

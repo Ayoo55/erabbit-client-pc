@@ -69,7 +69,7 @@ export default {
     }
   }
 }
-:deep(.xtx-carousel) {
+.goods-relevant :deep(.xtx-carousel) {
   height: 380px;
   .carousel {
     &-indicator {
@@ -81,7 +81,7 @@ export default {
       }
     }
     &-btn {
-      top: 110px;
+      top: 110px ;
       opacity: 1;
       background: rgba(0,0,0,0);
       color: #ddd;

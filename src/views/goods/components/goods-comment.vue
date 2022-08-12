@@ -15,30 +15,27 @@
     </div>
     <div class="sort">
       <span>排序：</span>
-      <a href="javascript:;" @click="reqParams.sortField='null'" :class="{active:reqParams.sortField===null}">默认</a>
-      <a href="javascript:;" @click="reqParams.sortField='createTime'" :class="{active:reqParams.sortField==='createTime'}">最新</a>
-      <a href="javascript:;" @click="reqParams.sortField='praiseCount'" :class="{active:reqParams.sortField==='praiseCount'}">最热</a>
+      <a href="javascript:;" @click="changeSort('null')"  :class="{active:reqParams.sortField===null}">默认</a>
+      <a href="javascript:;" @click="changeSort('createTime')" :class="{active:reqParams.sortField==='createTime'}">最新</a>
+      <a href="javascript:;" @click="changeSort('praiseCount')" :class="{active:reqParams.sortField==='praiseCount'}">最热</a>
     </div>
      <!-- 列表 -->
-    <div class="list">
-      <div class="item">
+    <div class="list" v-if="commentList">
+      <div class="item" v-for="item in commentList" :key="item.id">
         <div class="user">
-          <img src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/avatar_1.png" alt="">
-          <span>兔****m</span>
+          <img :src="item.member.avatar" alt="">
+          <span>{{formatNickname(item.member.nickname)}}</span>
         </div>
         <div class="body">
           <div class="score">
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx02"></i>
-            <span class="attr">颜色：黑色 尺码：M</span>
+            <i v-for="i in item.score" :key="i" class="iconfont icon-wjx01"></i>
+            <i v-for="i in 5-item.score" :key="i" class="iconfont icon-wjx02"></i>
+            <span class="attr">{{formatSpecs(item.orderInfo.specs)}}</span>
           </div>
-          <div class="text">网易云app上这款耳机非常不错 新人下载网易云购买这款耳机优惠大 而且耳机🎧确实正品 音质特别好 戴上这款耳机 听音乐看电影效果声音真是太棒了 无线方便 小盒自动充电 最主要是质量好音质棒 想要买耳机的放心拍 音效巴巴滴 老棒了</div>
+          <div class="text">{{item.content}}</div>
           <div class="time">
-            <span>2020-10-10 10:11:22</span>
-            <span class="zan"><i class="iconfont icon-dianzan"></i>100</span>
+            <span>{{item.createTime}}</span>
+            <span class="zan"><i class="iconfont icon-dianzan"></i> {{item.praiseCount}}</span>
           </div>
         </div>
       </div>
@@ -73,7 +70,15 @@ export default {
         reqParams.hasPicture = null
         reqParams.tag = commentInfo.value.tags[index].title
       }
+      reqParams.page = 1
     }
+
+    // 点击切换排序
+    const changeSort = (val) => {
+      reqParams.sortField = val
+      reqParams.page = 1
+    }
+
     // 接口中所需的查询参数
     const reqParams = reactive({
       page: 1,
@@ -85,14 +90,21 @@ export default {
 
     // 查询参数改变后重新调用接口
     const commentList = ref([])
-    watch(reqParams, (newVal) => {
-      reqParams.page = 1
+    watch(reqParams, () => {
       findGoodsCommentList(goods.id, reqParams).then(data => {
-        commentList.value = data.result
-        console.log(commentList)
+        commentList.value = data.result.items
       })
     }, { immediate: true })
-    return { commentInfo, currentTagIndex, changeIndex, reqParams }
+
+    // 商品信息格式化
+    const formatSpecs = (specs) => {
+      return specs.reduce((p, c) => `${p} ${c.name} : ${c.nameValue}`, '').trim()
+    }
+    // 名字格式化
+    const formatNickname = (nickname) => {
+      return nickname.substr(0, 1) + '****' + nickname.substr(-1)
+    }
+    return { formatNickname, formatSpecs, commentInfo, currentTagIndex, changeIndex, reqParams, changeSort, commentList }
   }
 }
 </script>

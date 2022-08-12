@@ -17,7 +17,6 @@ export default {
   name: 'GoodsDetail',
   setup () {
     const goods = inject('goods')
-    console.log(goods)
     return { goods }
   }
 }

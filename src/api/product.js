@@ -30,3 +30,12 @@ export const findCommentInfoByGoods = (id) => {
   // return request(`/goods/${id}/evaluate`)
   return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate`, 'get')
 }
+
+/**
+ * 获取商品的评价列表
+ * @param {String} id - 商品ID
+ */
+export const findGoodsCommentList = (id, params) => {
+  // return request(`/goods/${id}/evaluate`)
+  return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate/page`, 'get', params)
+}

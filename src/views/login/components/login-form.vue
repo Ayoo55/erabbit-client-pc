@@ -8,7 +8,7 @@
         <i class="iconfont icon-msg"></i> 使用短信登录
       </a>
     </div>
-    <Form class="form" :validation-schema="schema" autocomplete="off" v-slot="{errors}">
+    <Form ref="formCom" class="form" :validation-schema="mySchema" autocomplete="off" v-slot="{errors}">
       <template v-if="!isMsgLogin">
         <div class="form-item">
           <div class="input">
@@ -17,38 +17,45 @@
           </div>
           <div class="error" v-if="errors.account"><i class="iconfont icon-warning" />{{errors.account}}</div>
         </div>
+
         <div class="form-item">
           <div class="input">
             <i class="iconfont icon-lock"></i>
-            <Field v-model="form.password" name="password" type="password" placeholder="请输入密码" />
+            <Field :class="{error:errors.password}" v-model="form.password" name="password" type="password" placeholder="请输入密码" />
           </div>
+          <div class="error" v-if="errors.password"><i class="iconfont icon-warning" />{{errors.password}}</div>
         </div>
       </template>
       <template v-else>
         <div class="form-item">
           <div class="input">
             <i class="iconfont icon-user"></i>
-            <Field v-model="form.mobile" name="mobile" type="text" placeholder="请输入手机号" />
+            <Field :class="{error:errors.mobile}" v-model="form.mobile" name="mobile" type="text" placeholder="请输入手机号" />
           </div>
+          <div class="error" v-if="errors.mobile"><i class="iconfont icon-warning" />{{errors.mobile}}</div>
         </div>
+
         <div class="form-item">
           <div class="input">
             <i class="iconfont icon-code"></i>
-            <Field v-model="form.code" name="code" type="password" placeholder="请输入验证码" />
+            <Field :class="{error:errors.code}" v-model="form.code" name="code" type="text" placeholder="请输入验证码" />
             <span class="code">发送验证码</span>
           </div>
+          <div class="error" v-if="errors.code"><i class="iconfont icon-warning" />{{errors.code}}</div>
         </div>
       </template>
       <div class="form-item">
         <div class="agree">
-          <XtxCheckbox v-model="form.isAgree" />
+          <Field as='XtxCheckbox' name="isAgree" v-model="form.isAgree" />
           <span>我已同意</span>
           <a href="javascript:;">《隐私条款》</a>
           <span>和</span>
           <a href="javascript:;">《服务条款》</a>
         </div>
+        <div class="error" v-if="errors.isAgree"><i class="iconfont icon-warning" />{{errors.isAgree}}</div>
+
       </div>
-      <a href="javascript:;" class="btn">登录</a>
+      <a @click="login" href="javascript:;" class="btn">登录</a>
     </Form>
     <div class="action">
       <img src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png" alt="">
@@ -57,12 +64,14 @@
         <a href="javascript:;">免费注册</a>
       </div>
     </div>
+
   </div>
 </template>
 <script>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { Form, Field } from 'vee-validate'
-
+import schema from '@/utils/vee-validate-schema'
+import Message from '@/components/library/Message'
 export default {
   name: 'LoginForm',
   components: { Form, Field },
@@ -78,16 +87,31 @@ export default {
       account: null
     })
     // Form 的 validation-schema 接收定义好的校验规则对象
-    const schema = {
+    const mySchema = {
       // 校验 name 为 account 的表单,返回true就是校验成功，返回字符串就是失败,就是错误提示信息
-      account (value) {
-        if (!value) {
-          return '请输入用户名'
-        }
-        return true
-      }
+      account: schema.account,
+      password: schema.password,
+      mobile: schema.mobile,
+      code: schema.code,
+      isAgree: schema.isAgree
     }
-    return { isMsgLogin, form, schema }
+    // 监听isMsgLogin，重置表单
+    const formCom = ref(null)
+    watch(isMsgLogin, () => {
+      form.isAgree = true
+      form.mobile = null
+      form.password = null
+      form.code = null
+      form.account = null
+    })
+    // 对表单整体进行校验
+    const login = () => {
+      formCom.value.validate().then(value => {
+        console.log(value)
+        Message({ type: 'success', text: 'error' })
+      })
+    }
+    return { isMsgLogin, form, mySchema, login, formCom }
   }
 }
 </script>

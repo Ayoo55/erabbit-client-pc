@@ -72,6 +72,9 @@ import { reactive, ref, watch } from 'vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validate-schema'
 import Message from '@/components/library/Message'
+import { userAccountLogin } from '@/api/user'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 export default {
   name: 'LoginForm',
   components: { Form, Field },
@@ -104,11 +107,31 @@ export default {
       form.code = null
       form.account = null
     })
+    const route = useRoute()
+    const router = useRouter()
+    const store = useStore()
     // 对表单整体进行校验
     const login = () => {
       formCom.value.validate().then(value => {
-        console.log(value)
-        Message({ type: 'success', text: 'error' })
+        // console.log(value)
+        // Message({ type: 'success', text: 'error' })
+        // 校验通过
+        if (value) {
+          const { account, password } = form
+          userAccountLogin({ account, password }).then(data => {
+            // 从返回到数据中结构出需要存储的信息
+            const { id, account, nickname, avatar, token, mobile } = data.result
+            store.commit('user/setUser', { id, account, nickname, avatar, token, mobile })
+            // 提示
+            Message({ type: 'success', text: '登录成功' })
+            // 跳转页面
+            router.push(route.query.redirectUrl || '/')
+          }).catch(error => {
+            if (error.response.data) {
+              Message({ type: 'error', text: error.response.data.message || '登录失败' })
+            }
+          })
+        }
       })
     }
     return { isMsgLogin, form, mySchema, login, formCom }

@@ -60,7 +60,9 @@
       <a @click="login" href="javascript:;" class="btn">登录</a>
     </Form>
     <div class="action">
-      <img src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png" alt="">
+      <a href="https://graph.qq.com/oauth2.0/authorize?client_id=100556005&response_type=token&scope=all&redirect_uri=http%3A%2F%2Fwww.corho.com%3A8080%2F%23%2Flogin%2Fcallback">
+        <img src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png" alt="">
+      </a>
       <div class="url">
         <a href="javascript:;">忘记密码</a>
         <a href="javascript:;">免费注册</a>
@@ -78,6 +80,7 @@ import { userAccountLogin, userMobileLoginMsg, userMobileLogin } from '@/api/use
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { useIntervalFn } from '@vueuse/core'
+// import QC from 'qc'
 export default {
   name: 'LoginForm',
   components: { Form, Field },
@@ -175,6 +178,13 @@ export default {
         router.push(route.query.redirectUrl || '/')
       }
     }
+
+    // 这一段是为了得到点击QQ后的跳转地址，在同一页面跳转
+    // onMounted(() => {
+    //   QC.Login({
+    //     btnId: 'qqLoginBtn'
+    //   })
+    // })
     return { isMsgLogin, form, mySchema, login, formCom, send, time }
   }
 }

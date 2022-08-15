@@ -42,7 +42,7 @@ export default {
     const countyCode = ref('110101')
     const fullLocation = ref('北京市 市辖区 东城区')
     if (props.goods.userAddresses) {
-      const defaultAddr = props.goods.userAddresses().find(item => item.isDefault === 1)
+      const defaultAddr = props.goods.userAddresses.find(item => item.isDefault === 1)
       if (defaultAddr) {
         provinceCode.value = defaultAddr.provinceCode
         cityCode.value = defaultAddr.cityCode

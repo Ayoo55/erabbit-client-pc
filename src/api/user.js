@@ -31,6 +31,7 @@ export const userMobileLogin = ({ mobile, code }) => {
  * @returns Promise
  */
 export const userQQLogin = (unionId, source = 6) => {
+  console.log(unionId, source)
   return request('/login/social', 'post', { unionId, source })
 }
 
@@ -52,4 +53,22 @@ export const userQQBindCode = (mobile) => {
  */
 export const userQQBindLogin = ({ unionId, mobile, code }) => {
   return request('/login/social/bind', 'post', { unionId, mobile, code })
+}
+
+/**
+ * 校验帐号是否存在
+ * @param {String} account - 帐号
+ * @returns Promise
+ */
+export const userCheckAccount = (account) => {
+  return request('/register/check', 'get', { account })
+}
+
+/**
+ * 获取QQ完善信息时候的短信验证码
+ * @param {String} mobile - 手机号
+ * @returns promise
+ */
+export const userQQPatchCode = (mobile) => {
+  return request('/register/code', 'get', { mobile })
 }

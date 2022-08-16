@@ -150,12 +150,12 @@ export default {
       })
     },
     // 批量删除
-    batchDeleteCart (context) {
+    batchDeleteCart (context, isClear) {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
           // 已登录
         } else {
-          context.getters.selectedList.forEach(item => {
+          context.getters[isClear ? 'invalidList' : 'selectedList'].forEach(item => {
             context.commit('deleteCart', item.skuId)
           })
           resolve()

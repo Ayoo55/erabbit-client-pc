@@ -31,8 +31,15 @@
   </div>
 </template>
 <script>
+import { useStore } from 'vuex'
 export default {
-  name: 'AppHeaderCart'
+  name: 'AppHeaderCart',
+  setup () {
+    const store = useStore()
+    store.dispatch('cart/findCartList').then(() => {
+      console.log('更新成功')
+    })
+  }
 }
 </script>
 <style scoped lang="less">

@@ -1,3 +1,4 @@
+import { getNewCartGoods } from '@/api/cart'
 
 // 购物车状态
 export default {
@@ -19,7 +20,7 @@ export default {
     },
     // 商品总金额
     validAmount  (state, getters) {
-      return getters.validList.reduce((p, c) => p + c.nowPrice * 100 * c.count, 0) / 100
+      return getters.validList.reduce((p, c) => p + parseInt(c.nowPrice * 100) * c.count, 0) / 100
     }
   },
   mutations: {
@@ -34,6 +35,18 @@ export default {
         state.list.splice(sameIndex, 1)
       }
       state.list.unshift(payload)
+    },
+    // 修改商品信息
+    updateCart (state, goods) {
+      // goods就是商品信息
+      // 找到需要修改的商品对象
+      const updateGoods = state.list.find(item => item.skuId === goods.skuId)
+      // 根据goods传入的字段来决定修改哪些字段，并且要判断传入的值是否有效
+      for (const key in goods) {
+        if (goods[key] !== undefined || goods[key] !== null || goods[key] !== '') {
+          updateGoods[key] = goods[key]
+        }
+      }
     }
   },
   actions: {
@@ -46,6 +59,27 @@ export default {
         } else {
           // 未登录
           context.commit('insertCart', payload)
+          resolve()
+        }
+      })
+    },
+    // 获取商品列表
+    findCartList (context) {
+      // 区分已登录（异步）/未登录（同步）
+      return new Promise((resolve, reject) => {
+        if (context.rootState.user.token) {
+          // 已登录
+        } else {
+          // 未登录
+          // promiseArr.all(promise数组)，同时发送请求
+          const promiseArr = context.state.list.map(goods => {
+            return getNewCartGoods(goods.skuId)
+          })
+          Promise.all(promiseArr).then(dataList => {
+            dataList.forEach((data, index) => {
+              context.commit('updateCart', { skuId: context.state.list[index].skuId, ...data.result })
+            })
+          })
           resolve()
         }
       })

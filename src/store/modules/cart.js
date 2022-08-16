@@ -7,6 +7,21 @@ export default {
       list: []
     }
   },
+  // 计算属性
+  getters: {
+    // 有效商品列表
+    validList (state) {
+      return state.list.filter(goods => goods.stock > 0 && goods.isEffective)
+    },
+    // 商品总件数
+    validTotal (state, getters) {
+      return getters.validList.reduce((p, c) => p + c.count, 0)
+    },
+    // 商品总金额
+    validAmount  (state, getters) {
+      return getters.validList.reduce((p, c) => p + c.nowPrice * 100 * c.count, 0) / 100
+    }
+  },
   mutations: {
     // 加入购物车
     insertCart (state, payload) {

@@ -9,7 +9,7 @@
         <table>
           <thead>
             <tr>
-              <th width="120"><XtxCheckbox :modelValue="$store.getters['cart/isCheckAll']">全选</XtxCheckbox></th>
+              <th width="120"><XtxCheckbox @change="checkAll" :modelValue="$store.getters['cart/isCheckAll']">全选</XtxCheckbox></th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
               <th width="180">数量</th>
@@ -100,7 +100,10 @@ export default {
     const checkOne = (skuId, selected) => {
       store.dispatch('cart/updateCart', { skuId, selected })
     }
-    return { checkOne }
+    const checkAll = (selected) => {
+      store.dispatch('cart/checkAllCart', selected)
+    }
+    return { checkOne, checkAll }
   }
 }
 </script>

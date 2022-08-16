@@ -133,6 +133,21 @@ export default {
           resolve()
         }
       })
+    },
+    // 全选与取消全选
+    checkAllCart (context, selected) {
+      return new Promise((resolve, reject) => {
+        if (context.rootState.user.profile.token) {
+          // 已登录
+        } else {
+          // 本地
+          // 拿到有效商品列表,遍历每一项有效商品，
+          context.getters.validList.forEach(goods => {
+            context.commit('updateCart', { skuId: goods.skuId, selected })
+          })
+          resolve()
+        }
+      })
     }
   }
 }

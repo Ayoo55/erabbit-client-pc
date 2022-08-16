@@ -121,6 +121,18 @@ export default {
           resolve()
         }
       })
+    },
+    // 修改购物车商品
+    updateCart (context, goods) {
+      return new Promise((resolve, reject) => {
+        if (context.rootState.user.profile.token) {
+          // 已登录
+        } else {
+          // 本地
+          context.commit('updateCart', goods)
+          resolve()
+        }
+      })
     }
   }
 }

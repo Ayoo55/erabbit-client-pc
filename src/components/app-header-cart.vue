@@ -1,9 +1,9 @@
 <template>
   <div class="cart">
-    <a class="curr" href="javascript:;">
+    <router-link class="curr" to="/cart">
       <i class="iconfont icon-cart"></i><em>{{$store.getters['cart/validTotal']}}</em>
-    </a>
-    <div class="layer">
+    </router-link>
+    <div class="layer" v-if="$store.getters['cart/validTotal'] > 0 && $route.path !== '/cart'">
       <div class="list">
         <div class="item" v-for="item in $store.getters['cart/validList']" :key="item.skuId">
           <RouterLink to="">
@@ -17,7 +17,7 @@
               <p class="count">x{{item.count}}</p>
             </div>
           </RouterLink>
-          <i class="iconfont icon-close-new"></i>
+          <i @click="deleteCart(item.skuId)" class="iconfont icon-close-new"></i>
         </div>
       </div>
       <div class="foot">
@@ -36,9 +36,11 @@ export default {
   name: 'AppHeaderCart',
   setup () {
     const store = useStore()
-    store.dispatch('cart/findCartList').then(() => {
-      console.log('更新成功')
-    })
+    store.dispatch('cart/findCartList')
+    const deleteCart = (skuId) => {
+      store.dispatch('cart/deleteCart', skuId)
+    }
+    return { deleteCart }
   }
 }
 </script>

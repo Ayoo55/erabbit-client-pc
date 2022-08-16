@@ -47,6 +47,11 @@ export default {
           updateGoods[key] = goods[key]
         }
       }
+    },
+    // 删除商品信息
+    deleteCart (state, skuId) {
+      const index = state.list.findIndex(item => item.skuId === skuId)
+      state.list.splice(index, 1)
     }
   },
   actions: {
@@ -80,6 +85,19 @@ export default {
               context.commit('updateCart', { skuId: context.state.list[index].skuId, ...data.result })
             })
           })
+          resolve()
+        }
+      })
+    },
+    // 删除购物车
+    deleteCart (context, payload) {
+      return new Promise((resolve, reject) => {
+        if (context.rootState.user.token) {
+          // 已登录状态
+        } else {
+          // 未登录状态
+          // 单条商品删除
+          context.commit('deleteCart', payload)
           resolve()
         }
       })

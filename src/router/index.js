@@ -4,6 +4,7 @@ import SubCategory from '@/views/category/sub.vue'
 import Goods from '@/views/goods/index.vue'
 import Login from '@/views/login'
 import LoginCallback from '@/views/login/callback.vue'
+import XtxCartPage from '@/views/cart/index.vue'
 const routes = [
   {
     path: '/',
@@ -24,6 +25,10 @@ const routes = [
       {
         path: '/product/:id',
         component: Goods
+      },
+      {
+        path: '/cart',
+        component: XtxCartPage
       }
     ]
   },

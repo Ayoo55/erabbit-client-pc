@@ -20,7 +20,27 @@ export default {
     },
     // 商品总金额
     validAmount  (state, getters) {
-      return getters.validList.reduce((p, c) => p + parseInt(c.nowPrice * 100) * c.count, 0) / 100
+      return getters.validList.reduce((p, c) => p + Math.round(c.nowPrice * 100) * c.count, 0) / 100
+    },
+    // 无效商品列表
+    invalidList (state) {
+      return state.list.filter(goods => goods.stock <= 0 || !goods.isEffective)
+    },
+    // 选中商品列表
+    selectedList (state, getters) {
+      return getters.validList.filter(item => item.selected)
+    },
+    // 选中商品件数
+    selectedTotal (state, getters) {
+      return getters.selectedList.reduce((p, c) => p + c.count, 0)
+    },
+    // 选中商品总金额
+    selectedAmount (state, getters) {
+      return getters.selectedList.reduce((p, c) => p + Math.round(c.nowPrice * 100) * c.count, 0) / 100
+    },
+    // 是否全选
+    isCheckAll (state, getters) {
+      return getters.validList.length !== 0 && getters.validList.length === getters.selectedList.length
     }
   },
   mutations: {

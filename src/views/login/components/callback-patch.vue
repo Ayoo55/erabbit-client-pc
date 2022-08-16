@@ -124,6 +124,7 @@ export default {
     const submit = async () => {
       const valid = formCom.value.validate()
       if (valid) {
+        console.log(props.unionId)
         userQQPatchLogin({
           unionId: props.unionId,
           ...form

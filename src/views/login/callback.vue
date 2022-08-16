@@ -22,7 +22,7 @@
         <CallbackBind :unionId="unionId" />
       </div>
       <div class="tab-content" v-else>
-        <CallbackPatch />
+        <CallbackPatch :unionId="unionId"/>
       </div>
     </section>
     <LoginFooter></LoginFooter>

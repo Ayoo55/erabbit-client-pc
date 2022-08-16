@@ -20,7 +20,7 @@
                 <GoodsSku @change="changeSku" skuId="1563028" :goods="goods"/>
                 <!-- 数量组件 -->
                 <XtxNumbox label="数量" :maxNum="goods.inventory"  v-model="num"></XtxNumbox>
-                <XtxButton type="primary" style="margin-top:20px;">加入购物车</XtxButton>
+                <XtxButton @click="insertCart" type="primary" style="margin-top:20px;">加入购物车</XtxButton>
             </div>
         </div>
         <!-- 商品推荐 -->
@@ -56,6 +56,8 @@ import GoodsSku from './components/goods-sku.vue'
 import GoodsTabs from './components/goods-tabs.vue'
 import GoodsHot from './components/goods-hot.vue'
 import GoodsWarn from './components/goods-warn'
+import { useStore } from 'vuex'
+import Message from '@/components/library/Message'
 export default {
   name: 'XtxGoodsPage',
   components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku, GoodsTabs, GoodsHot, GoodsWarn },
@@ -67,10 +69,36 @@ export default {
         goods.value.oldPrice = sku.oldPrice
         goods.value.inventory = sku.inventory
       }
+      currSku.value = sku
     }
     provide('goods', goods)
     const num = ref(1)
-    return { goods, changeSku, num }
+
+    // 加入购物车
+    const store = useStore()
+    const currSku = ref(null)
+    const insertCart = () => {
+      if (currSku.value && currSku.value.skuId) {
+        store.dispatch('cart/insertCart', {
+          id: goods.value.id,
+          skuId: currSku.value.skuId,
+          name: goods.value.name,
+          picture: goods.value.mainPictures[0],
+          price: currSku.value.price,
+          nowPrice: currSku.value.price,
+          count: num.value,
+          attrsText: currSku.value.specsText,
+          selected: true,
+          isEffective: true,
+          stock: currSku.value.inventory
+        }).then(() => {
+          Message({ type: 'success', text: '加入购物车成功' })
+        })
+      } else {
+        Message({ type: 'warn', text: '请选择完整规格' })
+      }
+    }
+    return { goods, changeSku, num, insertCart }
   }
 }
 // 获取商品信息函数

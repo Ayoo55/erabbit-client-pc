@@ -72,3 +72,8 @@ export const userCheckAccount = (account) => {
 export const userQQPatchCode = (mobile) => {
   return request('/register/code', 'get', { mobile })
 }
+
+// 三方登录-完善信息
+export const userQQPatchLogin = ({ unionId, rePassword, ...data }) => {
+  return request(`/login/social/${unionId}/complement`, 'post', data)
+}

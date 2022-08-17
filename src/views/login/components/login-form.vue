@@ -173,8 +173,7 @@ export default {
         const { id, account, nickname, avatar, token, mobile } = data.result
         store.commit('user/setUser', { id, account, nickname, avatar, token, mobile })
         store.dispatch('cart/mergeLocalCart').then(() => {
-          // 2. 跳转
-          // 3. 提示
+          // 2. 跳转  3. 提示
           router.push(route.query.redirectUrl || '/')
           Message({ type: 'success', text: '登录成功' })
         })

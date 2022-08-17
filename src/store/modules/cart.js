@@ -1,5 +1,5 @@
-import { getNewCartGoods, mergeLocalCart, findCartList, insertCart } from '@/api/cart'
-
+import { getNewCartGoods, mergeLocalCart, findCartList, insertCart, deleteCart, updateCart, checkAllCart } from '@/api/cart'
+//
 // 购物车状态
 export default {
   namespaced: true,
@@ -84,7 +84,8 @@ export default {
     insertCart (context, payload) {
       return new Promise((resolve, reject) => {
         // context.rootState可以得到所有的state状态
-        if (context.rootState.user.token) {
+
+        if (context.rootState.user.profile.token) {
           // 已登录
           insertCart({ skuId: payload.skuId, count: payload.count }).then(() => {
             return findCartList()
@@ -128,8 +129,14 @@ export default {
     // 删除购物车
     deleteCart (context, payload) {
       return new Promise((resolve, reject) => {
-        if (context.rootState.user.token) {
+        if (context.rootState.user.profile.token) {
           // 已登录状态
+          // deleteCart(payload).then(() => {
+          //   return findCartList()
+          // }).then(data => {
+          //   context.commit('setCartList', data.result)
+          //   resolve()
+          // })
         } else {
           // 未登录状态
           // 单条商品删除
@@ -143,6 +150,12 @@ export default {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
           // 已登录
+          updateCart(goods).then(() => {
+            return findCartList()
+          }).then(data => {
+            context.commit('setCartList', data.result)
+            resolve()
+          })
         } else {
           // 本地
           context.commit('updateCart', goods)
@@ -155,6 +168,13 @@ export default {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
           // 已登录
+          const ids = context.getters.validList.map(item => item.skuId)
+          checkAllCart({ selected, ids }).then(() => {
+            return findCartList()
+          }).then(data => {
+            context.commit('setCartList', data.result)
+            resolve()
+          })
         } else {
           // 本地
           // 拿到有效商品列表,遍历每一项有效商品，
@@ -170,6 +190,13 @@ export default {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
           // 已登录
+          const ids = context.getters[isClear ? 'invalidList' : 'selectedList'].map(item => item.skuId)
+          deleteCart(ids).then(() => {
+            return findCartList()
+          }).then(data => {
+            context.commit('setCartList', data.result)
+            resolve()
+          })
         } else {
           context.getters[isClear ? 'invalidList' : 'selectedList'].forEach(item => {
             context.commit('deleteCart', item.skuId)
@@ -183,6 +210,14 @@ export default {
       return new Promise((resolve, reject) => {
         if (context.rootState.user.profile.token) {
           // 已登录
+          const oldGoods = context.state.list.find(item => item.skuId === oldSkuId)
+          deleteCart([oldSkuId]).then(() => {
+            return insertCart({ skuId: newSku.skuId, count: oldGoods.count })
+          }).then(() => {
+            return findCartList()
+          }).then(data => {
+            context.commit('setCartList', data.result)
+          })
         } else {
           const oldGoods = context.state.list.find(item => item.skuId === oldSkuId)
           context.commit('deleteCart', oldSkuId)

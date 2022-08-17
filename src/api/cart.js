@@ -42,3 +42,33 @@ export const findCartList = () => {
 export const insertCart = ({ skuId, count }) => {
   return request('/member/cart', 'post', { skuId, count })
 }
+
+/**
+ * 删除商品（支持批量删除）
+ * @param {Array<string>} ids - skuId集合
+ * @returns Promise
+ */
+export const deleteCart = (ids) => {
+  return request('/member/cart', 'delete', { ids })
+}
+
+/**
+ * 修改购物车商品（状态，数量）
+ * @param {String} skuId - SKUID
+ * @param {Integer} count - 加入购物车数量
+ * @param {Boolean} selected - 选中状态
+ * @returns
+ */
+export const updateCart = ({ skuId, selected, count }) => {
+  return request(`/member/cart/${skuId}`, 'put', { selected, count })
+}
+
+/**
+ * 全选反选
+ * @param {Boolean} selected - 选中状态
+ * @param {Array<string>} ids - 有效商品skuId集合
+ * @returns Promise
+ */
+export const checkAllCart = ({ selected, ids }) => {
+  return request('/member/cart/selected', 'put', { selected, ids })
+}

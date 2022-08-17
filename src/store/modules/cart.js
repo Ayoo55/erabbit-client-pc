@@ -1,4 +1,4 @@
-import { getNewCartGoods, mergeLocalCart } from '@/api/cart'
+import { getNewCartGoods, mergeLocalCart, findCartList, insertCart } from '@/api/cart'
 
 // 购物车状态
 export default {
@@ -80,11 +80,18 @@ export default {
   },
   actions: {
     // 区分已登录（异步）/未登录（同步）
+    // 加入购物车
     insertCart (context, payload) {
       return new Promise((resolve, reject) => {
         // context.rootState可以得到所有的state状态
         if (context.rootState.user.token) {
           // 已登录
+          insertCart({ skuId: payload.skuId, count: payload.count }).then(() => {
+            return findCartList()
+          }).then(data => {
+            context.commit('setCartList', data.result)
+            resolve()
+          })
         } else {
           // 未登录
           context.commit('insertCart', payload)
@@ -96,8 +103,13 @@ export default {
     findCartList (context) {
       // 区分已登录（异步）/未登录（同步）
       return new Promise((resolve, reject) => {
-        if (context.rootState.user.token) {
+        if (context.rootState.user.profile.token) {
           // 已登录
+          findCartList().then(data => {
+            context.commit('setCartList', data.result)
+            console.log(data.result)
+            resolve()
+          })
         } else {
           // 未登录
           // promiseArr.all(promise数组)，同时发送请求

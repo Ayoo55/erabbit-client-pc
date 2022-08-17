@@ -161,6 +161,22 @@ export default {
           resolve()
         }
       })
+    },
+    // 修改sku规格函数
+    updateCartSku (context, { oldSkuId, newSku }) {
+      return new Promise((resolve, reject) => {
+        if (context.rootState.user.profile.token) {
+          // 已登录
+        } else {
+          const oldGoods = context.state.list.find(item => item.skuId === oldSkuId)
+          context.commit('deleteCart', oldSkuId)
+          //  合并一条新的商品信息
+          const { skuId, price: nowPrice, inventory: stock, specsText: attrsText } = newSku
+          const newGoods = { ...oldGoods, skuId, nowPrice, stock, attrsText }
+          context.commit('insertCart', newGoods)
+        }
+      })
     }
+
   }
 }

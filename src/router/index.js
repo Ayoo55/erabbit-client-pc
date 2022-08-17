@@ -5,6 +5,7 @@ import Goods from '@/views/goods/index.vue'
 import Login from '@/views/login'
 import LoginCallback from '@/views/login/callback.vue'
 import XtxCartPage from '@/views/cart/index.vue'
+import store from '@/store'
 const routes = [
   {
     path: '/',
@@ -51,4 +52,15 @@ const router = createRouter({
   }
 })
 
+// 前置导航守卫
+// 约定：需要登录的路由，地址是以 /member 开头
+router.beforeEach((to, from, next) => {
+  // 用户信息
+  const { token } = store.state.user.profile
+  // 跳转去member开头的地址却没有登录
+  if (to.path.startsWith('/member') && !token) {
+    next('/login?redirectUrl=' + encodeURIComponent(to.fullPath))
+  }
+  next()
+})
 export default router

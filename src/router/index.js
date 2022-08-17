@@ -5,6 +5,7 @@ import Goods from '@/views/goods/index.vue'
 import Login from '@/views/login'
 import LoginCallback from '@/views/login/callback.vue'
 import XtxCartPage from '@/views/cart/index.vue'
+import XtxPayCheckoutPage from '@/views/member/pay/checkout.vue'
 import store from '@/store'
 const routes = [
   {
@@ -30,6 +31,10 @@ const routes = [
       {
         path: '/cart',
         component: XtxCartPage
+      },
+      {
+        path: '/member/checkout',
+        component: XtxPayCheckoutPage
       }
     ]
   },

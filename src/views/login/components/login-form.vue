@@ -172,10 +172,12 @@ export default {
         // 1. 存储信息
         const { id, account, nickname, avatar, token, mobile } = data.result
         store.commit('user/setUser', { id, account, nickname, avatar, token, mobile })
-        // 2. 提示
-        Message({ type: 'success', text: '登录成功' })
-        // 3. 跳转
-        router.push(route.query.redirectUrl || '/')
+        store.dispatch('cart/mergeLocalCart').then(() => {
+          // 2. 跳转
+          // 3. 提示
+          router.push(route.query.redirectUrl || '/')
+          Message({ type: 'success', text: '登录成功' })
+        })
       }
     }
 

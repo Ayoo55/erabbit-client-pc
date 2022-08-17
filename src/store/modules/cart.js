@@ -1,4 +1,4 @@
-import { getNewCartGoods } from '@/api/cart'
+import { getNewCartGoods, mergeLocalCart } from '@/api/cart'
 
 // 购物车状态
 export default {
@@ -72,6 +72,10 @@ export default {
     deleteCart (state, skuId) {
       const index = state.list.findIndex(item => item.skuId === skuId)
       state.list.splice(index, 1)
+    },
+    // 设置购物车列表
+    setCartList (state, list) {
+      state.list = list
     }
   },
   actions: {
@@ -176,7 +180,21 @@ export default {
           context.commit('insertCart', newGoods)
         }
       })
+    },
+    // 合并购物车
+    async mergeLocalCart (context) {
+      // 重新组合接口需要的参数
+      const cartList = context.state.list.map(goods => {
+        return {
+          skuId: goods.skuId,
+          selected: goods.selected,
+          count: goods.count
+        }
+      })
+      // 调用合并接口
+      await mergeLocalCart(cartList)
+      // 合并成功后删除本地购物车
+      context.commit('setCartList', [])
     }
-
   }
 }

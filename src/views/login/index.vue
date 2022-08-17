@@ -36,7 +36,7 @@ export default {
     const activeName = ref('account')
     const store = useStore()
     const route = useRoute()
-    store.commit('setRedirectUrl', route.query.redirectUr)
+    store.commit('user/setRedirectUrl', route.query.redirectUrl)
     return { activeName }
   }
 }

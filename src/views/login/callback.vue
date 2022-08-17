@@ -58,8 +58,10 @@ export default {
         userQQLogin(openId).then(data => {
           const { id, account, avatar, mobile, nickname, token } = data.result
           store.commit('user/setUser', { id, account, avatar, mobile, nickname, token })
-          router.push(store.state.user.redirectUrl)
-          Message({ type: 'success', text: 'QQ登录成功' })
+          store.dispatch('cart/mergeLocalCart').then(() => {
+            router.push(store.state.user.redirectUrl)
+            Message({ type: 'success', text: 'QQ登录成功' })
+          })
         }).catch(e => {
           isBind.value = false
         })

@@ -7,11 +7,11 @@
         <li><span>联系方式：</span>{{showAddress.contact.replace(/^(\d{3})\d{4}(d{4})/,'$1****$2')}}</li>
         <li><span>收货地址：</span>{{showAddress.fullLocation}}{{showAddress.address}}</li>
       </ul>
-      <a v-if="showAddress" href="javascript:;">修改地址</a>
+      <a @click="openAddressEdit(showAddress)" v-if="showAddress" href="javascript:;">修改地址</a>
     </div>
     <div class="action">
       <XtxButton @click="openDialog" class="btn">切换地址</XtxButton>
-      <XtxButton @click="openAddressEdit" class="btn">添加地址</XtxButton>
+      <XtxButton @click="openAddressEdit({})" class="btn">添加地址</XtxButton>
     </div>
     <XtxDialog v-model:visible="visibleDialog" title="切换收货地址">
         <div @click="selectedAddress=item" :class="{active: selectedAddress && selectedAddress.id === item.id}" class="text item" v-for="item in list" :key="item.id">
@@ -75,15 +75,26 @@ export default {
     // 得到组件实例
     const addressEdit = ref(null)
     // 显示新增地址的弹层
-    const openAddressEdit = () => {
-      addressEdit.value.open()
+    const openAddressEdit = (address) => {
+      addressEdit.value.open(address)
+      console.log(address)
     }
 
     const successHandler = (formData) => {
-      // 克隆formdata数据，以便后期更改 formData 数据不影响现在的数据
-      const jsonStr = JSON.stringify(formData)
-      // eslint-disable-next-line vue/no-mutating-props
-      props.list.unshift(JSON.parse(jsonStr))
+      // 在当前地址列表中查找ID，判断是新增还是修改
+      const address = props.list.find(item => item.id === formData.id)
+      if (address) {
+        // 修改
+        for (const key in address) {
+          address[key] = formData[key]
+        }
+      } else {
+        // 添加
+        // 克隆formdata数据，以便后期更改 formData 数据不影响现在的数据
+        const jsonStr = JSON.stringify(formData)
+        // eslint-disable-next-line vue/no-mutating-props
+        props.list.unshift(JSON.parse(jsonStr))
+      }
     }
     return { showAddress, visibleDialog, selectedAddress, confirmAddressFn, openDialog, addressEdit, openAddressEdit, successHandler }
   }

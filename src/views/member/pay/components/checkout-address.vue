@@ -28,7 +28,7 @@
     </XtxDialog>
   </div>
   <!-- 编辑收货地址 -->
-  <AddressEdit ref="addressEdit"></AddressEdit>
+  <AddressEdit @on-success="successHandler" ref="addressEdit"></AddressEdit>
 </template>
 <script>
 import { ref } from 'vue'
@@ -78,7 +78,14 @@ export default {
     const openAddressEdit = () => {
       addressEdit.value.open()
     }
-    return { showAddress, visibleDialog, selectedAddress, confirmAddressFn, openDialog, addressEdit, openAddressEdit }
+
+    const successHandler = (formData) => {
+      // 克隆formdata数据，以便后期更改 formData 数据不影响现在的数据
+      const jsonStr = JSON.stringify(formData)
+      // eslint-disable-next-line vue/no-mutating-props
+      props.list.unshift(JSON.parse(jsonStr))
+    }
+    return { showAddress, visibleDialog, selectedAddress, confirmAddressFn, openDialog, addressEdit, openAddressEdit, successHandler }
   }
 }
 </script>

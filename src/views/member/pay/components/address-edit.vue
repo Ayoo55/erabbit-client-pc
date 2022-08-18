@@ -5,58 +5,95 @@
             <div class="xtx-form-item">
                 <div class="label">收货人：</div>
                 <div class="field">
-                <input class="input" placeholder="请输入收货人" />
+                <input v-model="formData.receiver" class="input" placeholder="请输入收货人" />
                 </div>
             </div>
             <div class="xtx-form-item">
                 <div class="label">手机号：</div>
                 <div class="field">
-                <input class="input" placeholder="请输入手机号" />
+                <input v-model="formData.contact" class="input" placeholder="请输入手机号" />
                 </div>
             </div>
             <div class="xtx-form-item">
                 <div class="label">地区：</div>
                 <div class="field">
-                <XtxCity placeholder="请选择所在地区"/>
+                <XtxCity @change="changeCity" :fullLocation="formData.fullLocation" placeholder="请选择所在地区"/>
                 </div>
             </div>
             <div class="xtx-form-item">
                 <div class="label">详细地址：</div>
                 <div class="field">
-                <input class="input" placeholder="请输入详细地址" />
+                <input v-model="formData.address" class="input" placeholder="请输入详细地址" />
                 </div>
             </div>
             <div class="xtx-form-item">
                 <div class="label">邮政编码：</div>
                 <div class="field">
-                <input class="input" placeholder="请输入邮政编码" />
+                <input v-model="formData.postalCode" class="input" placeholder="请输入邮政编码" />
                 </div>
             </div>
             <div class="xtx-form-item">
                 <div class="label">地址标签：</div>
                 <div class="field">
-                <input class="input" placeholder="请输入地址标签，逗号分隔" />
+                <input v-model="formData.addressTags" class="input" placeholder="请输入地址标签，逗号分隔" />
                 </div>
             </div>
         </div>
     </div>
     <template #footer>
         <XtxButton  type="gray" style="margin-right:20px">取消</XtxButton>
-            <XtxButton  type="primary">确认</XtxButton>
+        <XtxButton  @click="submit" type="primary">确认</XtxButton>
     </template>
   </XtxDialog>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+import { addAddress } from '@/api/order'
+import Message from '@/components/library/Message'
 export default {
   name: 'AddressEdit',
-  setup () {
+  setup (props, { emit }) {
     const visibleDialog = ref(false)
     const open = () => {
       visibleDialog.value = true
+      //   添加时清空表单
+      for (const key in formData) {
+        if (key === 'isDefault') {
+          formData[key] = 1
+        } else {
+          formData[key] = null
+        }
+      }
     }
-    return { visibleDialog, open }
+    const formData = reactive({
+      receiver: '',
+      contact: '',
+      provinceCode: '',
+      cityCode: '',
+      countyCode: '',
+      address: '',
+      postalCode: '',
+      addressTags: '',
+      isDefault: 1,
+      fullLocation: ''
+    })
+    const changeCity = (result) => {
+      formData.provinceCode = result.provinceCode
+      formData.cityCode = result.cityCode
+      formData.countyCode = result.countyCode
+      formData.fullLocation = result.fullLocation
+    }
+    const submit = () => {
+      addAddress(formData).then(data => {
+        // 设置ID
+        formData.id = data.id
+        Message({ type: 'success', text: '添加地址成功' })
+        visibleDialog.value = false
+        emit('on-success', formData)
+      })
+    }
+    return { visibleDialog, open, formData, changeCity, submit }
   }
 
 }

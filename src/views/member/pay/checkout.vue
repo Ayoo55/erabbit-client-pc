@@ -8,7 +8,7 @@
       </XtxBread>
       <div class="wrapper" v-if="checkoutInfo">
         <!-- 收货地址 -->
-        <CheckoutAddress :list="checkoutInfo.userAddresses"></CheckoutAddress>
+        <CheckoutAddress @change="changeAddress" :list="checkoutInfo.userAddresses"></CheckoutAddress>
         <!-- 商品信息 -->
         <h3 class="box-title">商品信息</h3>
         <div class="box-body">
@@ -85,7 +85,12 @@ export default {
     findCheckoutInfo().then(data => {
       checkoutInfo.value = data.result
     })
-    return { checkoutInfo }
+    const addressId = ref(null)
+    const changeAddress = (id) => {
+      addressId.value = id
+      console.log(id)
+    }
+    return { checkoutInfo, changeAddress }
   }
 }
 </script>

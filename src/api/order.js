@@ -14,3 +14,8 @@ export const addAddress = (address) => {
 export const editAddress = (form) => {
   return request(`/member/address/${form.id}`, 'put', form)
 }
+
+// 提交订单
+export const submitOrder = (params) => {
+  return request('/member/order', 'post', params)
+}

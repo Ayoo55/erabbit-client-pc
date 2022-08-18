@@ -148,6 +148,11 @@ export default {
       if (store.getters['cart/selectedTotal'] === 0) {
         Message({ type: 'warn', text: '请至少勾选一件商品' })
       }
+      // 如果登录直接跳转
+      if (store.state.user.profile.token) {
+        return router.push('/member/checkout')
+      }
+      // 未登录弹出确认框
       Confirm({ text: '下单结算需要登录，您是否去登录？' }).then(() => {
         router.push('/member/checkout')
       })

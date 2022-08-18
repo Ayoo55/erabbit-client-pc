@@ -59,6 +59,7 @@ export default {
     const visibleDialog = ref(false)
     // 默认通知父组件一个收获地址ID
     emit('change', showAddress.value?.id)
+
     // 记录当前你选中的地址
     const selectedAddress = ref(null)
     const confirmAddressFn = () => {

@@ -11,7 +11,7 @@
     </div>
     <div class="action">
       <XtxButton @click="openDialog" class="btn">切换地址</XtxButton>
-      <XtxButton class="btn">添加地址</XtxButton>
+      <XtxButton @click="openAddressEdit" class="btn">添加地址</XtxButton>
     </div>
     <XtxDialog v-model:visible="visibleDialog" title="切换收货地址">
         <div @click="selectedAddress=item" :class="{active: selectedAddress && selectedAddress.id === item.id}" class="text item" v-for="item in list" :key="item.id">
@@ -27,17 +27,22 @@
         </template>
     </XtxDialog>
   </div>
+  <!-- 编辑收货地址 -->
+  <AddressEdit ref="addressEdit"></AddressEdit>
 </template>
 <script>
 import { ref } from 'vue'
+import AddressEdit from './address-edit.vue'
 export default {
   name: 'CheckoutAddress',
+  components: { AddressEdit },
   props: {
     list: {
       type: Array,
       default: () => []
     }
   },
+  emits: ['change'],
   setup (props, { emit }) {
     const showAddress = ref(null)
     const defaultAddress = props.list.find(item => item.isDefault === 0)
@@ -62,12 +67,18 @@ export default {
       emit('change', selectedAddress.value.id)
       visibleDialog.value = false
     }
+    // 切换地址显示的弹层
     const openDialog = () => {
       selectedAddress.value = null
       visibleDialog.value = true
     }
-
-    return { showAddress, visibleDialog, selectedAddress, confirmAddressFn, openDialog }
+    // 得到组件实例
+    const addressEdit = ref(null)
+    // 显示新增地址的弹层
+    const openAddressEdit = () => {
+      addressEdit.value.open()
+    }
+    return { showAddress, visibleDialog, selectedAddress, confirmAddressFn, openDialog, addressEdit, openAddressEdit }
   }
 }
 </script>

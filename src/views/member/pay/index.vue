@@ -11,7 +11,8 @@
         <span class="icon iconfont icon-queren2"></span>
         <div class="tip">
           <p>订单提交成功！请尽快完成支付。</p>
-          <p>支付还剩 <span>24分59秒</span>, 超时后将取消订单</p>
+          <p v-if="order.countdown">支付还剩 <span>{{timeText}}</span>, 超时后将取消订单</p>
+          <p v-else>订单已经超时</p>
         </div>
         <div class="amount">
           <span>应付总额：</span>
@@ -42,16 +43,21 @@
 import { findOrderDetail } from '@/api/order'
 import { useRoute } from 'vue-router'
 import { ref } from 'vue'
+import { usePayTime } from '@/hooks'
 export default {
   name: 'XtxPayPage',
   setup () {
     const route = useRoute()
     const order = ref(null)
+    // 获取订单详情
     findOrderDetail(route.query.orderId).then(data => {
       order.value = data.result
-      console.log(order.value.payMoney)
+      if (data.result.countdown > -1) {
+        start(data.result.countdown)
+      }
     })
-    return { order }
+    const { start, timeText } = usePayTime()
+    return { order, timeText }
   }
 }
 </script>

@@ -3,7 +3,7 @@
     <div class="container">
       <ul>
         <template v-if="profile.token">
-            <li><router-link to="/member"><i class="iconfont icon-user"></i>周杰伦</router-link></li>
+            <li><router-link to="/member"><i class="iconfont icon-user"></i>{{$store.state.user.profile.account}}</router-link></li>
             <li><a @click="logout" href="javascript:;">退出登录</a></li>
         </template>
         <template v-else>

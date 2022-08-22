@@ -5,6 +5,8 @@ import store from './store'
 
 import ui from './components/library'
 
+import './mock'
+
 // 重置样式的库
 import 'normalize.css'
 // 自己的样式库

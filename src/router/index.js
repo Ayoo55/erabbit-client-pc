@@ -10,7 +10,11 @@ import XtxPayPage from '@/views/member/pay/index.vue'
 import XtxPayResultPage from '@/views/member/pay/result.vue'
 import MemberLayout from '@/views/member/Layout.vue'
 import MemberHome from '@/views/member/home'
+import MemberOrder from '@/views/member/order'
+import MemberOrderDetail from '@/views/member/order/detail.vue'
 import store from '@/store'
+import { h } from 'vue'
+// import { h } from 'vue'
 const routes = [
   {
     path: '/',
@@ -52,13 +56,17 @@ const routes = [
         path: '/member',
         component: MemberLayout,
         children: [
+          { path: '/member', component: MemberHome },
           {
-            path: '/member',
-            component: MemberHome
+            path: '/member/order',
+            component: { render: () => h(<RouterView />) },
+            children: [
+              { path: '', component: MemberOrder },
+              { path: ':id', component: MemberOrderDetail }
+            ]
           }
         ]
       }
-
     ]
   },
   {

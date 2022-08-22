@@ -147,6 +147,7 @@ export default {
     const checkout = () => {
       if (store.getters['cart/selectedTotal'] === 0) {
         Message({ type: 'warn', text: '请至少勾选一件商品' })
+        return false
       }
       // 如果登录直接跳转
       if (store.state.user.profile.token) {

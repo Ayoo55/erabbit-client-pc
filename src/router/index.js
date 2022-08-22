@@ -8,6 +8,8 @@ import XtxCartPage from '@/views/cart/index.vue'
 import XtxPayCheckoutPage from '@/views/member/pay/checkout.vue'
 import XtxPayPage from '@/views/member/pay/index.vue'
 import XtxPayResultPage from '@/views/member/pay/result.vue'
+import MemberLayout from '@/views/member/Layout.vue'
+import MemberHome from '@/views/member/home'
 import store from '@/store'
 const routes = [
   {
@@ -45,6 +47,16 @@ const routes = [
       {
         path: '/pay/callback',
         component: XtxPayResultPage
+      },
+      {
+        path: '/member',
+        component: MemberLayout,
+        children: [
+          {
+            path: '/member',
+            component: MemberHome
+          }
+        ]
       }
 
     ]

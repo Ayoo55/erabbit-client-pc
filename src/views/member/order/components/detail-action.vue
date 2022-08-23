@@ -50,7 +50,6 @@ export default {
     const order = ref(null)
     const route = useRoute()
     findOrderDetail(route.params.id).then(data => {
-      console.log(data.result)
       order.value = data.result
     })
     return { order, orderStatus }

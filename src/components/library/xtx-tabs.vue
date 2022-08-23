@@ -22,7 +22,6 @@ export default {
   },
   render () {
     const panels = this.$slots.default()
-    console.log(panels)
     // const panel1 = <a> { panels[0].props.label } </a>
     // const panel2 = panels[1].props.label
     // const nav = <nav>{ panels }</nav>

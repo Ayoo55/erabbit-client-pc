@@ -9,6 +9,7 @@
       <div v-if="loading" class="loading"></div>
       <div class="none" v-if="!loading && orderList.length === 0">暂无数据</div>
       <OrderItem
+        @on-logistics="handlerLogistics"
         @on-submit="handlerSubmit"
         @on-delete="handlerDelete"
         @on-cancel="handlerCancel"
@@ -28,6 +29,8 @@
     ></XtxPagination>
     <!-- 取消原因组件 -->
     <OrderCancel ref="orderCancelCom"></OrderCancel>
+    <!-- 物流组件 -->
+    <OrderLogistics ref="orderLogisticsCom"></OrderLogistics>
   </div>
 </template>
 
@@ -39,10 +42,11 @@ import { findOrderList, confirmOrder, deleteOrder } from '@/api/order'
 import OrderCancel from './components/order-cancel.vue'
 import Confirm from '@/components/library/Confirm'
 import Message from '@/components/library/Message'
+import OrderLogistics from './components/order-logistics.vue'
 export default {
 
   name: 'MemberOrder',
-  components: { OrderItem, OrderCancel },
+  components: { OrderItem, OrderCancel, OrderLogistics },
   setup () {
     const activeName = ref('all')
     const orderList = ref([])
@@ -83,7 +87,7 @@ export default {
     }
 
     // 删除订单
-    const onDeleteOrder = (item) => {
+    const handlerDelete = (item) => {
       Confirm({ text: '您确认删除该条订单吗' }).then(() => {
         deleteOrder([item.id]).then(() => {
           Message({ text: '删除订单成功', type: 'success' })
@@ -102,10 +106,18 @@ export default {
       })
     }
 
-    return { activeName, orderStatus, orderList, tabClick, loading, reqParams, total, handlerCancel, orderCancelCom, onDeleteOrder, handlerSubmit }
+    return { activeName, orderStatus, orderList, tabClick, loading, reqParams, total, handlerCancel, orderCancelCom, handlerDelete, handlerSubmit, ...useLogistics() }
   }
 }
 
+// 查看物流
+const useLogistics = () => {
+  const orderLogisticsCom = ref(null)
+  const handlerLogistics = (item) => {
+    orderLogisticsCom.value.open(item)
+  }
+  return { handlerLogistics, orderLogisticsCom }
+}
 </script>
 
 <style lang="less" scoped>

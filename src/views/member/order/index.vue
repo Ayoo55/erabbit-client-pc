@@ -8,7 +8,14 @@
     <div class="order-list">
       <div v-if="loading" class="loading"></div>
       <div class="none" v-if="!loading && orderList.length === 0">暂无数据</div>
-      <OrderItem  @on-cancel="handlerCancel" v-for="item in orderList" :key="item.id" :order="item" />
+      <OrderItem
+        @on-submit="handlerSubmit"
+        @on-delete="handlerDelete"
+        @on-cancel="handlerCancel"
+        v-for="item in orderList"
+        :key="item.id"
+        :order="item"
+      />
     </div>
 
     <!-- 分页组件 -->
@@ -28,9 +35,10 @@
 import { reactive, ref, watch } from 'vue'
 import { orderStatus } from '@/api/constants'
 import OrderItem from './components/order-item.vue'
-import { findOrderList } from '@/api/order'
+import { findOrderList, confirmOrder, deleteOrder } from '@/api/order'
 import OrderCancel from './components/order-cancel.vue'
-
+import Confirm from '@/components/library/Confirm'
+import Message from '@/components/library/Message'
 export default {
 
   name: 'MemberOrder',
@@ -50,13 +58,16 @@ export default {
     const total = ref(null)
 
     // 监听reqParams数据改变
-    watch(reqParams, () => {
+    const findOrderListFn = () => {
       loading.value = true
       findOrderList(reqParams).then(data => {
         orderList.value = data.result.items
         total.value = data.result.counts
         loading.value = false
       })
+    }
+    watch(reqParams, () => {
+      findOrderListFn()
     }, { immediate: true })
 
     // 点击选项卡
@@ -71,10 +82,30 @@ export default {
       orderCancelCom.value.open(item)
     }
 
-    return { activeName, orderStatus, orderList, tabClick, loading, reqParams, total, handlerCancel, orderCancelCom }
-  }
+    // 删除订单
+    const onDeleteOrder = (item) => {
+      Confirm({ text: '您确认删除该条订单吗' }).then(() => {
+        deleteOrder([item.id]).then(() => {
+          Message({ text: '删除订单成功', type: 'success' })
+          findOrderListFn()
+        })
+      })
+    }
 
+    const handlerSubmit = (item) => {
+      Confirm({ text: '您要确定收货吗' }).then(() => {
+        confirmOrder(item.id).then(() => {
+          Message({ text: '确认收货成功', type: 'success' })
+          // 确认收货后状态变成 待评价
+          item.orderState = 4
+        })
+      })
+    }
+
+    return { activeName, orderStatus, orderList, tabClick, loading, reqParams, total, handlerCancel, orderCancelCom, onDeleteOrder, handlerSubmit }
+  }
 }
+
 </script>
 
 <style lang="less" scoped>

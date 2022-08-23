@@ -34,3 +34,13 @@ export const findOrderList = ({ page = 1, pageSize = 10, orderState = 0 }) => {
 export const cancelOrder = (orderId, cancelReason) => {
   return request(`/member/order/${orderId}/cancel`, 'put', { cancelReason })
 }
+
+// 确认收货
+export const confirmOrder = (id) => {
+  return request(`/member/order/${id}/receipt`, 'put', IDBDatabase)
+}
+
+// 删除订单
+export const deleteOrder = (ids) => {
+  return request('/member/order', 'delete', { ids })
+}

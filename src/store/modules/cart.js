@@ -108,7 +108,6 @@ export default {
           // 已登录
           findCartList().then(data => {
             context.commit('setCartList', data.result)
-            console.log(data.result)
             resolve()
           })
         } else {

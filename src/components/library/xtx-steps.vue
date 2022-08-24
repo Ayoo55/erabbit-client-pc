@@ -9,7 +9,6 @@ export default {
     }
   },
   render () {
-    console.log(this.active)
     // 获取默认插槽的节点
     const items = this.$slots.default()
     const dymanicItems = []

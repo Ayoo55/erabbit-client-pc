@@ -111,7 +111,7 @@ export default {
 }
 
 // 查看物流
-const useLogistics = () => {
+export const useLogistics = () => {
   const orderLogisticsCom = ref(null)
   const handlerLogistics = (item) => {
     orderLogisticsCom.value.open(item)

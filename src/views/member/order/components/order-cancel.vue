@@ -36,7 +36,6 @@ export default {
     const currText = ref('')
     // 其他组件打开对话框
     const open = (item) => {
-      console.log('open')
       visibleDialog.value = true
       order.value = item
       currText.value = ''

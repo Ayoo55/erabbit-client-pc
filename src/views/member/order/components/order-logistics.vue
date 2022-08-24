@@ -34,7 +34,6 @@ export default {
       visibleDialog.value = true
       logisticsOrder(item.id).then((data) => {
         logistics.value = data.result
-        console.log(logistics.value)
       })
     }
 

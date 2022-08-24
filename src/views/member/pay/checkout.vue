@@ -75,21 +75,29 @@
 </template>
 <script>
 import CheckoutAddress from './components/checkout-address.vue'
-import { submitOrder, findCheckoutInfo } from '@/api/order'
+import { submitOrder, findCheckoutInfo, findOrderRepurchase } from '@/api/order'
 import { reactive, ref } from 'vue'
 import Message from '@/components/library/Message'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 export default {
   name: 'XtxPayCheckoutPage',
   components: { CheckoutAddress },
   setup () {
     // 获取结算信息，生成订单
+    const route = useRoute()
     const checkoutInfo = ref(null)
-    findCheckoutInfo().then(data => {
-      checkoutInfo.value = data.result
-      reqParams.goods = data.result.goods.map(({ skuId, count }) => ({ skuId, count }))
-      console.log(reqParams.goods)
-    })
+    const orderId = route.query.orderId
+    if (orderId) {
+      findOrderRepurchase(orderId).then(data => {
+        checkoutInfo.value = data.result
+        reqParams.goods = data.result.goods.map(({ skuId, count }) => ({ skuId, count }))
+      })
+    } else {
+      findCheckoutInfo().then(data => {
+        checkoutInfo.value = data.result
+        reqParams.goods = data.result.goods.map(({ skuId, count }) => ({ skuId, count }))
+      })
+    }
 
     // 修改地址
     const changeAddress = (id) => {

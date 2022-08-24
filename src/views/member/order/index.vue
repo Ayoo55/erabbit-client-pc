@@ -81,10 +81,10 @@ export default {
     }
 
     // 取消订单
-    const orderCancelCom = ref(null)
-    const handlerCancel = (item) => {
-      orderCancelCom.value.open(item)
-    }
+    // const orderCancelCom = ref(null)
+    // const handlerCancel = (item) => {
+    //   orderCancelCom.value.open(item)
+    // }
 
     // 删除订单
     const handlerDelete = (item) => {
@@ -95,19 +95,22 @@ export default {
         })
       })
     }
-
-    const handlerSubmit = (item) => {
-      Confirm({ text: '您要确定收货吗' }).then(() => {
-        confirmOrder(item.id).then(() => {
-          Message({ text: '确认收货成功', type: 'success' })
-          // 确认收货后状态变成 待评价
-          item.orderState = 4
-        })
-      })
-    }
-
-    return { activeName, orderStatus, orderList, tabClick, loading, reqParams, total, handlerCancel, orderCancelCom, handlerDelete, handlerSubmit, ...useLogistics() }
+    return { activeName, orderStatus, orderList, tabClick, loading, reqParams, total, handlerDelete, ...useLogistics(), ...useOrderCancel(), ...useConfirmOrder() }
   }
+}
+
+// 确认收货
+export const useConfirmOrder = () => {
+  const handlerSubmit = (item) => {
+    Confirm({ text: '您要确定收货吗' }).then(() => {
+      confirmOrder(item.id).then(() => {
+        Message({ text: '确认收货成功', type: 'success' })
+        // 确认收货后状态变成 待评价
+        item.orderState = 4
+      })
+    })
+  }
+  return { handlerSubmit }
 }
 
 // 查看物流
@@ -117,6 +120,15 @@ export const useLogistics = () => {
     orderLogisticsCom.value.open(item)
   }
   return { handlerLogistics, orderLogisticsCom }
+}
+
+// 取消订单
+export const useOrderCancel = () => {
+  const orderCancelCom = ref(null)
+  const handlerCancel = (item) => {
+    orderCancelCom.value.open(item)
+  }
+  return { handlerCancel, orderCancelCom }
 }
 </script>
 

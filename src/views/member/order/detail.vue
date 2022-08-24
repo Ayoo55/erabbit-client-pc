@@ -7,14 +7,12 @@
     <!-- 物流栏 -->
     <Suspense>
       <template #default >
-        <DetailLogistics :order="order"></DetailLogistics>
+        <DetailLogistics v-if="[3,4,5].includes(order.orderState)" :order="order"></DetailLogistics>
       </template>
       <template #fallback>
         <div class="loading">...loading</div>
       </template>
     </Suspense>
-      <!-- <DetailLogistics v-if="[3,4,5].includes(order.orderState)" :order="order"></DetailLogistics> -->
-
     <!-- 订单商品信息 -->
   </div>
 </template>

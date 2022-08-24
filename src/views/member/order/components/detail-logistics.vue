@@ -6,7 +6,9 @@
     </p>
     <a href="javascript:;" @click="handlerLogistics(order)">查看物流</a>
     <!-- 物流组件 -->
-    <OrderLogistics ref="orderLogisticsCom"></OrderLogistics>
+    <Teleport to="#model">
+      <OrderLogistics ref="orderLogisticsCom"></OrderLogistics>
+    </Teleport>
   </div>
 </template>
 <script>

@@ -12,7 +12,7 @@
             <!-- 待付款 -->
             <template v-if="order.orderState === 1">
                 <XtxButton @click="$router.push('/member/pay?id='+order.id)" type="primary" size="small">立即付款</XtxButton>
-                <XtxButton type="gray" size="small">取消订单</XtxButton>
+                <XtxButton @click="handlerCancel(order)" type="gray" size="small">取消订单</XtxButton>
             </template>
             <!-- 待发货 -->
             <template v-if="order.orderState === 2">
@@ -20,7 +20,7 @@
             </template>
             <!-- 待收货 -->
             <template v-if="order.orderState === 3">
-                <XtxButton type="primary" size="small">确认收货</XtxButton>
+                <XtxButton @click="handlerSubmit(order)" type="primary" size="small">确认收货</XtxButton>
                 <XtxButton type="plain" size="small">再次购买</XtxButton>
             </template>
             <!-- 待评价 -->
@@ -37,6 +37,10 @@
             </template>
             <!-- 已取消 -->
         </div>
+        <!-- 取消原因组件 -->
+        <Teleport to="#model">
+          <OrderCancel ref="orderCancelCom"></OrderCancel>
+        </Teleport>
     </div>
 </template>
 <script>
@@ -44,15 +48,18 @@ import { findOrderDetail } from '@/api/order'
 import { useRoute } from 'vue-router'
 import { ref } from 'vue'
 import { orderStatus } from '@/api/constants'
+import { useOrderCancel, useConfirmOrder } from '../index.vue'
+import OrderCancel from './order-cancel.vue'
 export default {
   name: 'OrderDetailAction',
+  components: { OrderCancel },
   setup () {
     const order = ref(null)
     const route = useRoute()
     findOrderDetail(route.params.id).then(data => {
       order.value = data.result
     })
-    return { order, orderStatus }
+    return { order, orderStatus, ...useOrderCancel(), ...useConfirmOrder() }
   }
 }
 </script>
